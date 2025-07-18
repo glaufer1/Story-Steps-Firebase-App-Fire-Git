@@ -1,5 +1,5 @@
 import React from 'react';
-import { LinkButtonBlock } from '../../interfaces';
+import type { LinkButtonBlock } from '../../interfaces';
 import './EditorStyles.css';
 
 interface LinkButtonFormProps {

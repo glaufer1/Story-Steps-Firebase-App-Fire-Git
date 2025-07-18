@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocationBlock } from '../../interfaces';
+import type { LocationBlock } from '../../interfaces';
 import Map, { Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './EditorStyles.css';

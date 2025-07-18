@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageSliderBlock } from '../../interfaces';
+import type { ImageSliderBlock } from '../../interfaces';
 import './EditorStyles.css';
 
 interface ImageSliderFormProps {

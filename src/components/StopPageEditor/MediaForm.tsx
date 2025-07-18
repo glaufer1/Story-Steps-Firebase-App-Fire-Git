@@ -1,5 +1,5 @@
 import React from 'react';
-import { MediaBlock } from '../../interfaces';
+import type { MediaBlock } from '../../interfaces';
 import './EditorStyles.css';
 
 interface MediaFormProps {

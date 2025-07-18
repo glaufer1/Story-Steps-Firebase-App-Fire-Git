@@ -1,5 +1,5 @@
 import React from 'react';
-import { OpeningTimesBlock } from '../../interfaces';
+import type { OpeningTimesBlock } from '../../interfaces';
 import './EditorStyles.css';
 
 interface OpeningTimesFormProps {

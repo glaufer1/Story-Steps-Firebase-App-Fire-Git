@@ -1,26 +1,15 @@
 import { useState, useEffect } from 'react';
-import { getAuth, onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import type { User as FirebaseUser } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import './App.css';
 import Login from './Login';
 import TourCreator from './TourCreator';
 import TourList from './TourList';
 import AdminPage from './AdminPage';
-import PageManagement from './pages/PageManagement'; // Corrected import path
-
-export interface Tour {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  stops: google.maps.LatLngLiteral[];
-}
-
-export interface AppUser {
-  uid: string;
-  email: string | null;
-  role: 'Admin' | 'Creator' | 'Customer';
-}
+import PageManagement from './pages/PageManagement';
+import type { Tour, AppUser } from './interfaces';
+import { auth, db } from './firebaseConfig';
 
 type View = 'tours' | 'admin' | 'pages';
 
@@ -30,8 +19,6 @@ function App() {
   const [currentView, setCurrentView] = useState<View>('tours');
 
   useEffect(() => {
-    const auth = getAuth();
-    const db = getFirestore();
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
         const userRef = doc(db, 'users', firebaseUser.uid);

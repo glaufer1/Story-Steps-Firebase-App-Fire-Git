@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, getDocs, doc, updateDoc, DocumentData, DocumentSnapshot } from 'firebase/firestore';
-import { AppUser } from './App'; // Assuming AppUser is exported from App.tsx
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+import type { DocumentData, DocumentSnapshot } from 'firebase/firestore';
+import type { AppUser } from './interfaces';
+import { db } from './firebaseConfig';
 
 const AdminPage = () => {
     const [users, setUsers] = useState<AppUser[]>([]);
@@ -9,7 +11,6 @@ const AdminPage = () => {
 
     const fetchUsers = async () => {
         setLoading(true);
-        const db = getFirestore();
         try {
             const querySnapshot = await getDocs(collection(db, "users"));
             const usersData = querySnapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as AppUser));
@@ -27,7 +28,6 @@ const AdminPage = () => {
     }, []);
 
     const handleRoleChange = async (uid: string, newRole: 'Admin' | 'Creator' | 'Customer') => {
-        const db = getFirestore();
         const userRef = doc(db, "users", uid);
         try {
             await updateDoc(userRef, { role: newRole });

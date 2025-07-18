@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import { AppUser } from '../App';
-import { Page, StopPage } from '../interfaces';
+import type { AppUser, Page, StopPage } from '../interfaces';
 import StopPageEditor from '../components/StopPageEditor/StopPageEditor'; // Import the editor
 
 interface PageManagementProps {

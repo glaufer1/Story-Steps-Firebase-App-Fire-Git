@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextBlock } from '../../interfaces';
+import type { TextBlock } from '../../interfaces';
 import './EditorStyles.css';
 
 interface TextFormProps {

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import './TourList.css';
-import { Tour, AppUser } from './App'; // Import the Tour and AppUser interface
+import type { Tour, AppUser } from './interfaces';
+import { db } from './firebaseConfig';
 
 interface TourListProps {
   onEdit: (tour: Tour) => void;
@@ -15,7 +16,6 @@ const TourList: React.FC<TourListProps> = ({ onEdit, user }) => {
 
   const fetchTours = async () => {
     setLoading(true);
-    const db = getFirestore();
     try {
       const querySnapshot = await getDocs(collection(db, "tours"));
       const toursData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Tour));
@@ -33,7 +33,6 @@ const TourList: React.FC<TourListProps> = ({ onEdit, user }) => {
   }, []);
 
   const handleDelete = async (tourId: string) => {
-    const db = getFirestore();
     if (window.confirm("Are you sure you want to delete this tour?")) {
       try {
         await deleteDoc(doc(db, "tours", tourId));

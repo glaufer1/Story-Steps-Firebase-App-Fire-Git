@@ -5,7 +5,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { v4 as uuidv4 } from 'uuid';
 
-import { StopPage, ContentBlock, BlockType, TextBlock, MediaBlock, LocationBlock, HowToGetFromBlock, LinkButtonBlock, SocialMediaBlock, OpeningTimesBlock, ImageSliderBlock } from '../../interfaces';
+import type { StopPage, ContentBlock, BlockType, TextBlock, MediaBlock, LocationBlock, HowToGetFromBlock, LinkButtonBlock, SocialMediaBlock, OpeningTimesBlock, ImageSliderBlock } from '../../interfaces';
 import Modal from '../Modal';
 import GeoFenceForm from './GeoFenceForm';
 

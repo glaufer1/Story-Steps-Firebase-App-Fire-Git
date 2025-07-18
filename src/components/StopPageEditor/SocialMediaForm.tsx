@@ -1,5 +1,5 @@
 import React from 'react';
-import { SocialMediaBlock } from '../../interfaces';
+import type { SocialMediaBlock } from '../../interfaces';
 import './EditorStyles.css';
 
 interface SocialMediaFormProps {

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useCallback } from 'react';
-import { HowToGetFromBlock } from '../../interfaces';
+import type { HowToGetFromBlock } from '../../interfaces';
 import Map, { Marker } from 'react-map-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import 'mapbox-gl/dist/mapbox-gl.css';

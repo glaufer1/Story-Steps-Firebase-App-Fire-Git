@@ -7,6 +7,12 @@ export interface Tour {
   stops: google.maps.LatLngLiteral[];
 }
 
+export interface AppUser {
+  uid: string;
+  email: string | null;
+  role: 'Admin' | 'Creator' | 'Customer';
+}
+
 // Base Page and Tour-level interfaces
 export interface Page {
     id: string;

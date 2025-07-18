@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import './Login.css';
+import { auth, db } from './firebaseConfig';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,8 +11,6 @@ const Login = () => {
   const [error, setError] = useState('');
 
   const handleAuthAction = async () => {
-    const auth = getAuth();
-    const db = getFirestore();
     setError('');
 
     try {
@@ -34,7 +33,6 @@ const Login = () => {
   };
 
   const handleLogout = () => {
-    const auth = getAuth();
     signOut(auth);
   };
 

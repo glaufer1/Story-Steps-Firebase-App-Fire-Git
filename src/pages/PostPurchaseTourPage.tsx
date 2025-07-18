@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { PostPurchaseTourPage as PostPurchaseTourPageProps } from '../interfaces';
+import type { PostPurchaseTourPage as PostPurchaseTourPageProps } from '../interfaces';
 import Modal from '../components/Modal'; 
 import './PageStyles.css';
 import { ArrowLeft, Share2 } from 'lucide-react';
-import { getAuth } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
 const PostPurchaseTourPage: React.FC<{ page: PostPurchaseTourPageProps }> = ({ page }) => {
     const [isDownloaded, setIsDownloaded] = useState(false);
@@ -30,7 +30,6 @@ const PostPurchaseTourPage: React.FC<{ page: PostPurchaseTourPageProps }> = ({ p
 
     const handleDownload = async () => {
         setIsDownloading(true);
-        const auth = getAuth();
         const user = auth.currentUser;
         let authToken = '';
         if (user) {

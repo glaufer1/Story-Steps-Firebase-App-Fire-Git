@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, addDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { GoogleMap, useJsApiLoader, Marker, Polyline } from '@react-google-maps/api';
 import './TourCreator.css';
-import type { Tour } from './interfaces'; // Corrected import path
+import type { Tour } from './interfaces';
+import { db } from './firebaseConfig';
 
 interface TourCreatorProps {
   tourToEdit: Tour | null;
@@ -78,7 +79,6 @@ const TourCreator: React.FC<TourCreatorProps> = ({ tourToEdit, onFinishEditing }
       return;
     }
 
-    const db = getFirestore();
     const tourData = {
       title,
       description,
