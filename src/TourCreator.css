@@ -1,0 +1,51 @@
+.tour-creator-container {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tour-creator-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.tour-creator-container input,
+.tour-creator-container textarea {
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.tour-creator-container textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.tour-creator-container button {
+  padding: 12px 15px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.tour-creator-container button:hover {
+  background-color: #218838;
+}
+
+.tour-creator-container p {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}

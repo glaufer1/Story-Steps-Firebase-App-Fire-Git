@@ -1,0 +1,163 @@
+.stop-page-editor {
+  padding: 2rem;
+  background-color: #f0f2f5;
+  border-radius: 8px;
+}
+
+.top-level-form {
+  background-color: #fff;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.top-level-form h3 {
+  margin-top: 0;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.form-grid label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.block-form-placeholder, .block-form {
+  background-color: #fff;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  cursor: grab;
+}
+
+.block-form-placeholder:active, .block-form:active {
+    cursor: grabbing;
+}
+
+.block-form h4 {
+  margin-top: 0;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.block-form textarea,
+.block-form input[type="text"],
+.block-form input[type="number"],
+.block-form select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  box-sizing: border-box;
+}
+
+.map-container-form {
+    margin-top: 1rem;
+    width: 100%;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures the map corners are rounded */
+}
+
+.editor-actions {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.editor-actions button, .add-btn, .remove-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add-btn {
+    background-color: #28a745; /* Green */
+    margin-top: 1rem;
+}
+
+.remove-btn {
+    background-color: #dc3545; /* Red */
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.form-group-box {
+    border: 1px solid #e0e0e0;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background-color: #fcfcfc;
+}
+
+/* HowToGetFromForm Specific Styles */
+.pin-controls {
+    margin-bottom: 1rem;
+}
+
+.map-pin {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    cursor: grab;
+}
+
+.pin-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pin-editor {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    background-color: #f7f7f7;
+    border-radius: 4px;
+}
+
+
+/* Styles for the new block selection modal */
+.block-selection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.block-selection button {
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.block-selection button:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}

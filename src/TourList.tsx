@@ -1,0 +1,81 @@
+import React, { useState, useEffect } from 'react';
+import { getFirestore, collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import './TourList.css';
+import { Tour, AppUser } from './App'; // Import the Tour and AppUser interface
+
+interface TourListProps {
+  onEdit: (tour: Tour) => void;
+  user: AppUser | null;
+}
+
+const TourList: React.FC<TourListProps> = ({ onEdit, user }) => {
+  const [tours, setTours] = useState<Tour[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const fetchTours = async () => {
+    setLoading(true);
+    const db = getFirestore();
+    try {
+      const querySnapshot = await getDocs(collection(db, "tours"));
+      const toursData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Tour));
+      setTours(toursData);
+    } catch (err) {
+      setError('Failed to fetch tours.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTours();
+  }, []);
+
+  const handleDelete = async (tourId: string) => {
+    const db = getFirestore();
+    if (window.confirm("Are you sure you want to delete this tour?")) {
+      try {
+        await deleteDoc(doc(db, "tours", tourId));
+        // Refresh the list after deleting
+        fetchTours();
+      } catch (err) {
+        setError('Failed to delete tour.');
+        console.error(err);
+      }
+    }
+  };
+  
+  const isPrivilegedUser = user?.role === 'Admin' || user?.role === 'Creator';
+
+  if (loading) return <p>Loading tours...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+
+  return (
+    <div className="tour-list-container">
+      <h2>Existing Tours</h2>
+      {tours.length === 0 ? (
+        <p>No tours found. {isPrivilegedUser && "Create one above!"}</p>
+      ) : (
+        <ul>
+          {tours.map(tour => (
+            <li key={tour.id}>
+              <div>
+                <strong>{tour.title}</strong> - ${tour.price}
+                <p>{tour.description}</p>
+              </div>
+              {isPrivilegedUser && (
+                <div className="actions">
+                  <button className="edit" onClick={() => onEdit(tour)}>Edit</button>
+                  <button className="delete" onClick={() => handleDelete(tour.id)}>Delete</button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default TourList;

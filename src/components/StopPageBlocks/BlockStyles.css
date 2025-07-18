@@ -1,0 +1,46 @@
+.stop-page-block {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+/* Media Grid Styles */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.media-item img,
+.media-item video {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.media-item audio {
+  width: 100%;
+}
+
+/* Link Button Styles */
+.link-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.link-btn {
+  display: block;
+  padding: 0.75rem 1rem;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.link-btn:hover {
+  background-color: #0056b3;
+}

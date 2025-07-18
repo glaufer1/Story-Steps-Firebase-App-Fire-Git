@@ -1,0 +1,64 @@
+.tour-list-container {
+  width: 90%;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  border-top: 2px solid #eee;
+}
+
+.tour-list-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #444;
+}
+
+.tour-list-container ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.tour-list-container li {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.tour-list-container li strong {
+  font-size: 1.2em;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.tour-list-container li p {
+  margin: 5px 0 15px 0;
+  color: #666;
+}
+
+.tour-list-container li .actions {
+  display: flex;
+  gap: 10px;
+  align-self: flex-end;
+}
+
+.tour-list-container li button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.tour-list-container li button.edit {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.tour-list-container li button.delete {
+  background-color: #dc3545;
+  color: white;
+}
