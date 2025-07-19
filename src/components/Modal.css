@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7); /* Slightly darker overlay */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -12,11 +12,12 @@
 }
 
 .modal-content {
-    background: white;
+    background: #333; /* Dark background for the modal */
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Adjusted shadow for dark theme */
     max-width: 400px;
     width: 90%;
     text-align: center;
+    color: #eee; /* Light text for the modal content */
 }

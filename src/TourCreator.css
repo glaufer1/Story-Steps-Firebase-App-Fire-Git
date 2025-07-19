@@ -4,24 +4,28 @@
   width: 500px;
   margin: 50px auto;
   padding: 30px;
-  border: 1px solid #ccc;
+  border: 1px solid #444; /* Darker border */
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adjusted shadow */
+  background-color: #333; /* Dark background */
+  color: #eee; /* Light text */
 }
 
 .tour-creator-container h2 {
   text-align: center;
   margin-bottom: 25px;
-  color: #333;
+  color: #eee;
 }
 
 .tour-creator-container input,
 .tour-creator-container textarea {
   margin-bottom: 15px;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #666; /* Darker border for inputs */
   border-radius: 4px;
   font-size: 16px;
+  background-color: #444; /* Dark input background */
+  color: #eee; /* Light text for inputs */
 }
 
 .tour-creator-container textarea {
@@ -31,7 +35,7 @@
 
 .tour-creator-container button {
   padding: 12px 15px;
-  background-color: #28a745;
+  background-color: #198754; /* Consistent button color */
   color: white;
   border: none;
   border-radius: 4px;
@@ -41,7 +45,7 @@
 }
 
 .tour-creator-container button:hover {
-  background-color: #218838;
+  background-color: #146c43; /* Darker shade on hover */
 }
 
 .tour-creator-container p {

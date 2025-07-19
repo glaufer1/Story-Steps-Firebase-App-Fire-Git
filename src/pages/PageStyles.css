@@ -1,15 +1,16 @@
 /* General Page Styles & Mobile-First Approach */
 body {
     font-family: 'Inter', sans-serif;
+    color: #eee; /* Light text for dark mode */
 }
 
 .mobile-view {
-    background-color: #fff;
+    background-color: #242424; /* Dark background */
     max-width: 480px; /* Simulating mobile screen */
     margin: auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5); /* Adjusted shadow */
     padding-bottom: 80px; /* Space for the sticky footer */
-    color: #111827;
+    color: #eee; /* Light text */
 }
 
 /* Page Management List Styles */
@@ -23,9 +24,9 @@ body {
     list-style: none;
     padding: 0;
     margin-top: 2rem;
-    border: 1px solid #ddd;
+    border: 1px solid #444; /* Darker border */
     border-radius: 8px;
-    background-color: #fff;
+    background-color: #333; /* Dark background */
 }
 
 .page-list-item {
@@ -33,7 +34,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #444; /* Darker border */
 }
 
 .page-list-item:last-child {
@@ -47,20 +48,21 @@ body {
 
 .page-actions .edit-btn, .page-actions .delete-btn {
     padding: 0.5rem 1rem;
-    border: 1px solid #ccc;
+    border: 1px solid #666; /* Darker border */
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
 }
 
 .page-actions .edit-btn {
-    background-color: #f0f0f0;
+    background-color: #555; /* Darker button background */
+    color: #eee; /* Light text */
 }
 
 .page-actions .delete-btn {
-    background-color: #fbebeb;
-    color: #dc3545;
-    border-color: #f5c6cb;
+    background-color: #5c2c2c; /* Darker red background */
+    color: #ffcccc; /* Lighter red text */
+    border-color: #7b3d3d; /* Darker red border */
 }
 
 
@@ -84,7 +86,7 @@ body {
     padding: 1rem;
     display: flex;
     justify-content: space-between;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0));
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0));
 }
 
 .icon-btn {
@@ -109,7 +111,7 @@ body {
 .tour-metadata {
     display: flex;
     gap: 1rem;
-    color: #666;
+    color: #ccc; /* Lighter text for metadata */
     margin-bottom: 1.5rem;
 }
 
@@ -135,8 +137,8 @@ body {
 }
 
 .modal-btn.secondary {
-    background-color: #e5e7eb;
-    color: #111827;
+    background-color: #555;
+    color: #eee;
 }
 
 
@@ -146,4 +148,29 @@ body {
         max-width: 100%;
         box-shadow: none;
     }
+}
+/* Add this to your existing PageStyles.css */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.user-table th, .user-table td {
+    border: 1px solid #444; /* Darker border */
+    padding: 8px;
+    text-align: left;
+}
+
+.user-table th {
+    background-color: #333; /* Dark background for header */
+}
+
+.user-table select {
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #666; /* Darker border */
+    border-radius: 4px;
+    background-color: #444; /* Dark background for select */
+    color: #eee; /* Light text */
 }

@@ -4,12 +4,69 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <title>Story Steps - Your Adventure Awaits</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/pages/PageStyles.css">
+    <link rel="stylesheet" href="/src/App.css">
+    <style>
+      /* Additional styles for the landing page */
+      .hero {
+        text-align: center;
+        padding: 4rem 2rem;
+      }
+      .hero h1 {
+        font-size: 3rem;
+        font-family: 'Poppins', sans-serif;
+        margin-bottom: 1rem;
+      }
+      .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+      }
+      .cta-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+      }
+      .cta-buttons a {
+        text-decoration: none;
+        color: white;
+        background-color: #646cff;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 700;
+        transition: background-color 0.2s;
+      }
+      .cta-buttons a:hover {
+        background-color: #535bf2;
+      }
+    </style>
   </head>
   <body>
+    <div class="mobile-view">
+      <header class="app-header">
+        <nav class="main-nav">
+          <div class="nav-group">
+            <a href="/app" class="nav-button">App</a>
+          </div>
+          <div class="nav-group">
+            <a href="/login" class="nav-button">Login</a>
+          </div>
+        </nav>
+      </header>
+      <main>
+        <div class="hero">
+          <h1>Welcome to Story Steps</h1>
+          <p>Create and explore immersive, location-based audio tours.</p>
+          <div class="cta-buttons">
+            <a href="/app">Get Started</a>
+            <a href="/login">Sign In</a>
+          </div>
+        </div>
+      </main>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

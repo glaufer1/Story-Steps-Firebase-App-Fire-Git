@@ -20,6 +20,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-map-gl": "^7.0.21",
+    "react-router-dom": "^7.7.0",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
