@@ -31,7 +31,7 @@ const polylineOptions = {
   zIndex: 1
 };
 
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const GOOGLE_MAPS_API_KEY = "AIzaSyAOED-Gm0NzcE5DYrAT68kSgJDWqr_sjac";
 
 const TourCreator: React.FC<TourCreatorProps> = ({ tourToEdit, onFinishEditing }) => {
   const { isLoaded } = useJsApiLoader({
@@ -66,7 +66,7 @@ const TourCreator: React.FC<TourCreatorProps> = ({ tourToEdit, onFinishEditing }
 
   const onMapClick = (e: google.maps.MapMouseEvent) => {
     if (e.latLng) {
-      setMarkers(current => [...current, { lat: e.latLng.lat(), lng: e.latLng.lng() }]);
+      setMarkers(current => [...current, { lat: e.latLng!.lat(), lng: e.latLng!.lng() }]);
     }
   };
 

@@ -34,7 +34,10 @@ const renderBlockForm = (block: ContentBlock, onChange: (updatedBlock: ContentBl
         case 'social': return <SocialMediaForm block={block as SocialMediaBlock} onChange={onChange} />;
         case 'openingTimes': return <OpeningTimesForm block={block as OpeningTimesBlock} onChange={onChange} />;
         case 'imageSlider': return <ImageSliderForm block={block as ImageSliderBlock} onChange={onChange} />;
-        default: return <p>Unsupported block type: {block.type}</p>;
+        default: {
+            const exhaustiveCheck: never = block;
+            return <p>Unsupported block type: {exhaustiveCheck}</p>;
+        }
     }
 };
 
@@ -67,16 +70,20 @@ const StopPageEditor: React.FC<StopPageEditorProps> = ({ page, onSave }) => {
     };
 
     const handleAddNewBlock = (type: BlockType) => {
-        const newBlock: any = { id: uuidv4(), type, order: contentBlocks.length };
+        let newBlock: ContentBlock;
         switch (type) {
-            case 'text': newBlock.content = 'New Text Block'; break;
-            case 'media': newBlock.items = []; break;
-            case 'location': newBlock.latitude = 0; newBlock.longitude = 0; newBlock.mapType = 'Start Point'; newBlock.address = ''; break;
-            case 'howToGetFrom': newBlock.routeData = { type: 'FeatureCollection', features: [] }; newBlock.pins = []; break;
-            case 'links': newBlock.title = 'Useful Links'; newBlock.buttons = []; break;
-            case 'social': newBlock.links = []; break;
-            case 'openingTimes': newBlock.times = []; break;
-            case 'imageSlider': newBlock.imageUrl1 = ''; newBlock.imageUrl2 = ''; break;
+            case 'text': newBlock = { id: uuidv4(), type, order: contentBlocks.length, content: 'New Text Block' }; break;
+            case 'media': newBlock = { id: uuidv4(), type, order: contentBlocks.length, items: [] }; break;
+            case 'location': newBlock = { id: uuidv4(), type, order: contentBlocks.length, latitude: 0, longitude: 0, mapType: 'Start Point', address: '' }; break;
+            case 'howToGetFrom': newBlock = { id: uuidv4(), type, order: contentBlocks.length, routeData: { type: 'FeatureCollection', features: [] }, pins: [], startAddress: '', endAddress: '' }; break;
+            case 'links': newBlock = { id: uuidv4(), type, order: contentBlocks.length, title: 'Useful Links', buttons: [] }; break;
+            case 'social': newBlock = { id: uuidv4(), type, order: contentBlocks.length, links: [] }; break;
+            case 'openingTimes': newBlock = { id: uuidv4(), type, order: contentBlocks.length, times: [] }; break;
+            case 'imageSlider': newBlock = { id: uuidv4(), type, order: contentBlocks.length, imageUrl1: '', imageUrl2: '' }; break;
+            default: {
+                const exhaustiveCheck: never = type;
+                throw new Error(`Unsupported block type: ${exhaustiveCheck}`);
+            }
         }
         setContentBlocks(current => [...current, newBlock]);
         setIsModalOpen(false);

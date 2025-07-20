@@ -15,7 +15,7 @@ export interface AppUser {
 
 // Base Page and Tour-level interfaces
 export interface Page {
-    id: string;
+    id:string;
     type: 'City' | 'PrePurchaseTour' | 'PostPurchaseTour' | 'Stop' | 'Collection';
     title: string;
     description: string;
@@ -23,13 +23,30 @@ export interface Page {
 }
 
 export interface CityPage extends Page { type: 'City'; tours: string[]; }
-export interface PrePurchaseTourPage extends Page { /* ... as before ... */ }
-export interface PostPurchaseTourPage extends Page { /* ... as before ... */ }
-export interface CollectionPage extends Page { /* ... as before ... */ }
+
+export interface PrePurchaseTourPage extends Page {
+  type: 'PrePurchaseTour';
+  distance: number;
+  stops: Stop[];
+  travelMode: string;
+  previewAudioUrl: string;
+  price: number;
+}
+
+export interface PostPurchaseTourPage extends Page {
+  type: 'PostPurchaseTour';
+  preDepartureHeroImageUrl: string;
+  preDepartureAudioUrl: string;
+  stops: Stop[];
+  totalSizeMB: number;
+  tourTime: string;
+}
+
+export interface CollectionPage extends Page { type: 'Collection'; }
 
 // --- NEW MODULAR CONTENT BLOCKS for StopPage ---
 
-type BlockType = 'text' | 'media' | 'openingTimes' | 'links' | 'imageSlider' | 'location' | 'howToGetFrom' | 'social';
+export type BlockType = 'text' | 'media' | 'openingTimes' | 'links' | 'imageSlider' | 'location' | 'howToGetFrom' | 'social';
 
 export interface BaseBlock {
     id: string; // Unique ID for each block instance
@@ -42,13 +59,15 @@ export interface TextBlock extends BaseBlock {
     content: string; // HTML content from a rich text editor
 }
 
+export interface MediaItem {
+    type: 'image' | 'audio' | 'video';
+    url: string; // URL to the asset or YouTube embed
+    caption?: string;
+}
+
 export interface MediaBlock extends BaseBlock {
     type: 'media';
-    items: {
-        type: 'image' | 'audio' | 'video';
-        url: string; // URL to the asset or YouTube embed
-        caption?: string;
-    }[];
+    items: MediaItem[];
 }
 
 export interface OpeningTimesBlock extends BaseBlock {
@@ -109,6 +128,14 @@ export interface SocialMediaBlock extends BaseBlock {
 export type ContentBlock = TextBlock | MediaBlock | OpeningTimesBlock | LinkButtonBlock | ImageSliderBlock | LocationBlock | HowToGetFromBlock | SocialMediaBlock;
 
 // --- UPDATED StopPage Interface ---
+
+export interface Stop {
+    id: string;
+    title: string;
+    heroImageUrl: string;
+    audioFileUrl: string;
+    videoUrl?: string;
+}
 
 export interface StopPage extends Page {
     type: 'Stop';

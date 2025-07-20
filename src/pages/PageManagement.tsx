@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import type { AppUser, Page, StopPage } from '../interfaces';
 import StopPageEditor from '../components/StopPageEditor/StopPageEditor'; // Import the editor
+import CreatePageForm from '../components/CreatePageForm'; // Import the new form
 
 interface PageManagementProps {
     user: AppUser;
@@ -85,7 +86,7 @@ const PageManagement: React.FC<PageManagementProps> = ({ user }) => {
     return (
         <div className="page-list-container">
             <h2>Page Management</h2>
-            {/* We can add a simplified "Create Page" form back here later */}
+            <CreatePageForm />
             <ul className="page-list">
                 {pages.map(page => (
                     <li key={page.id} className="page-list-item">

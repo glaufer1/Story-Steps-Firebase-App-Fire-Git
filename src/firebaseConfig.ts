@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAHL2zi4Lp48mlUg2V1Fq291uyd2c07K-8",
   authDomain: "story-steps-app-fire.firebaseapp.com",
   projectId: "story-steps-app-fire",
-  storageBucket: "story-steps-app-fire.firebasestorage.app",
+  storageBucket: "story-steps-app-fire.appspot.com",
   messagingSenderId: "760436635711",
   appId: "1:760436635711:web:0db01b99f62bee7378608a",
   measurementId: "G-TJBGGCSGB1"
@@ -19,8 +19,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize and export Firebase services
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const analytics = getAnalytics(app);
+const analytics = getAnalytics(app);

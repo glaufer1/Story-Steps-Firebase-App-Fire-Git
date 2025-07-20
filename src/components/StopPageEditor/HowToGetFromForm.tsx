@@ -1,26 +1,25 @@
-import React, { useRef, useEffect, useCallback } from 'react';
-import type { HowToGetFromBlock } from '../../interfaces';
-import Map, { Marker } from 'react-map-gl';
+import React, { useCallback } from 'react';
+import type { HowToGetFromBlock, Pin } from '../../interfaces';
+import Map, { Marker, useMap } from 'react-map-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import './EditorStyles.css';
 import { v4 as uuidv4 } from 'uuid';
+import { MAPBOX_TOKEN } from '../../constants';
 
 interface HowToGetFromFormProps {
   block: HowToGetFromBlock;
   onChange: (updatedBlock: HowToGetFromBlock) => void;
 }
 
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_PUBLIC_TOKEN;
-const PinColors = ['Blue', 'Yellow', 'Green', 'Red', 'Purple', 'Orange'];
+const PinColors: Pin['color'][] = ['Blue', 'Yellow', 'Green', 'Red', 'Purple', 'Orange'];
 
 const HowToGetFromForm: React.FC<HowToGetFromFormProps> = ({ block, onChange }) => {
-  const mapRef = useRef<any>();
-  
+  const { current: map } = useMap();
+
   const onMapLoad = useCallback(() => {
-    if (mapRef.current) {
-        const map = mapRef.current.getMap();
+    if (map) {
         const draw = new MapboxDraw({
             displayControlsDefault: false,
             controls: { line_string: true, trash: true },
@@ -40,18 +39,19 @@ const HowToGetFromForm: React.FC<HowToGetFromFormProps> = ({ block, onChange }) 
             draw.add(block.routeData);
         }
     }
-  }, [block, onChange]);
+  }, [block, onChange, map]);
   
   const handleAddPin = () => {
-    const map = mapRef.current.getMap();
-    const center = map.getCenter();
-    const newPin = {
-      id: uuidv4(),
-      latitude: center.lat,
-      longitude: center.lng,
-      color: 'Blue'
-    };
-    onChange({ ...block, pins: [...block.pins, newPin] });
+    if (map) {
+      const center = map.getCenter();
+      const newPin: Pin = {
+        id: uuidv4(),
+        latitude: center.lat,
+        longitude: center.lng,
+        color: 'Blue'
+      };
+      onChange({ ...block, pins: [...block.pins, newPin] });
+    }
   };
   
   const handlePinDragEnd = (index: number, e: any) => {
@@ -61,7 +61,7 @@ const HowToGetFromForm: React.FC<HowToGetFromFormProps> = ({ block, onChange }) 
     onChange({ ...block, pins: newPins });
   };
 
-  const handlePinColorChange = (index: number, color: string) => {
+  const handlePinColorChange = (index: number, color: Pin['color']) => {
     const newPins = [...block.pins];
     newPins[index] = { ...newPins[index], color: color };
     onChange({ ...block, pins: newPins });
@@ -70,6 +70,10 @@ const HowToGetFromForm: React.FC<HowToGetFromFormProps> = ({ block, onChange }) 
   const handleRemovePin = (index: number) => {
       const newPins = block.pins.filter((_, i) => i !== index);
       onChange({ ...block, pins: newPins });
+  }
+
+  if (!MAPBOX_TOKEN) {
+    return <div className="error-message">Mapbox token is not configured.</div>;
   }
 
   return (
@@ -83,7 +87,6 @@ const HowToGetFromForm: React.FC<HowToGetFromFormProps> = ({ block, onChange }) 
 
       <div className="map-container-form" style={{ height: 500 }}>
         <Map
-          ref={mapRef}
           initialViewState={{ longitude: -98.5795, latitude: 39.8283, zoom: 3 }}
           style={{ width: '100%', height: '100%' }}
           mapStyle="mapbox://styles/mapbox/streets-v9"
@@ -108,7 +111,7 @@ const HowToGetFromForm: React.FC<HowToGetFromFormProps> = ({ block, onChange }) 
           {block.pins.map((pin, index) => (
               <div key={pin.id} className="pin-editor">
                   <span>Pin #{index + 1}</span>
-                  <select value={pin.color} onChange={(e) => handlePinColorChange(index, e.target.value)}>
+                  <select value={pin.color} onChange={(e) => handlePinColorChange(index, e.target.value as Pin['color'])}>
                       {PinColors.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                   <button className="remove-btn" onClick={() => handleRemovePin(index)}>Remove</button>

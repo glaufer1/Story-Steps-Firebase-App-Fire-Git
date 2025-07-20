@@ -1,5 +1,4 @@
 import React from 'react';
-import type { Tour } from '../interfaces'; // Assuming a generic Tour interface
 import './PageStyles.css';
 
 // This is placeholder data. We will fetch this from Firestore later.

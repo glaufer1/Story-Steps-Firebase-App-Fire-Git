@@ -1,14 +1,13 @@
 import React from 'react';
-import { LocationBlock } from '../../interfaces';
+import type { LocationBlock } from '../../interfaces';
 import Map, { Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './BlockStyles.css';
+import { MAPBOX_TOKEN } from '../../constants';
 
 interface LocationSectionProps {
   block: LocationBlock;
 }
-
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_PUBLIC_TOKEN;
 
 const LocationSection: React.FC<LocationSectionProps> = ({ block }) => {
   const buttonLabel = `Get Directions to ${block.mapType}`;

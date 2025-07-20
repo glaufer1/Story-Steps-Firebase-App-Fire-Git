@@ -40,7 +40,7 @@ const PostPurchaseTourPage: React.FC<{ page: PostPurchaseTourPageProps }> = ({ p
         const urlsToCache = [
             page.preDepartureHeroImageUrl,
             page.preDepartureAudioUrl,
-            ...page.stops.flatMap(stop => [stop.thumbnailUrl, stop.audioUrl, stop.videoUrl])
+            ...page.stops.flatMap(stop => [stop.heroImageUrl, stop.audioFileUrl, stop.videoUrl])
         ].filter(url => url); // Filter out any undefined/null URLs
 
         // Send a message to the service worker to start the download

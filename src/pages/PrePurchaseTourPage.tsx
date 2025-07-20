@@ -1,7 +1,7 @@
 import React from 'react';
-import { PrePurchaseTourPage as PrePurchaseTourPageProps } from '../interfaces';
-import './PageStyles.css'; // We will create this file next
-import { ArrowLeft, Heart, Share2 } from 'lucide-react'; // Using lucide-react for icons
+import type { PrePurchaseTourPage as PrePurchaseTourPageProps, Stop } from '../interfaces';
+import './PageStyles.css';
+import { ArrowLeft, Heart, Share2 } from 'lucide-react';
 
 const PrePurchaseTourPage: React.FC<{ page: PrePurchaseTourPageProps }> = ({ page }) => {
 
@@ -46,9 +46,9 @@ const PrePurchaseTourPage: React.FC<{ page: PrePurchaseTourPageProps }> = ({ pag
                 <div className="stop-list">
                     <h2>Tour Stops</h2>
                     <ul>
-                        {page.stops.map((stop, index) => (
+                        {page.stops.map((stop: Stop, index: number) => (
                             <li key={stop.id} className="stop-item">
-                                <img src={stop.thumbnailUrl} alt={stop.title} className="stop-thumbnail" />
+                                <img src={stop.heroImageUrl} alt={stop.title} className="stop-thumbnail" />
                                 <span className="stop-name">{`Stop ${index + 1}: ${stop.title}`}</span>
                             </li>
                         ))}

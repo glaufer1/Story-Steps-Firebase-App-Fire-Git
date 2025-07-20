@@ -16,12 +16,15 @@ const TourList: React.FC<TourListProps> = ({ onEdit, user }) => {
 
   const fetchTours = async () => {
     setLoading(true);
+    // Clear previous errors when refetching
+    setError('');
     try {
       const querySnapshot = await getDocs(collection(db, "tours"));
       const toursData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Tour));
       setTours(toursData);
-    } catch (err) {
-      setError('Failed to fetch tours.');
+    } catch (err: any) {
+      const errorMessage = err.message || 'An unknown error occurred.';
+      setError(`Failed to fetch tours: ${errorMessage}`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -38,8 +41,10 @@ const TourList: React.FC<TourListProps> = ({ onEdit, user }) => {
         await deleteDoc(doc(db, "tours", tourId));
         // Refresh the list after deleting
         fetchTours();
-      } catch (err) {
-        setError('Failed to delete tour.');
+      } catch (err: any) {
+        // Provide a more specific error message
+        const errorMessage = err.message || 'Please try again.';
+        setError(`Failed to delete tour. ${errorMessage}`);
         console.error(err);
       }
     }
@@ -48,11 +53,14 @@ const TourList: React.FC<TourListProps> = ({ onEdit, user }) => {
   const isPrivilegedUser = user?.role === 'Admin' || user?.role === 'Creator';
 
   if (loading) return <p>Loading tours...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  
 
   return (
     <div className="tour-list-container">
       <h2>Existing Tours</h2>
+      {/* Display a prominent error message if something fails */}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      
       {tours.length === 0 ? (
         <p>No tours found. {isPrivilegedUser && "Create one above!"}</p>
       ) : (

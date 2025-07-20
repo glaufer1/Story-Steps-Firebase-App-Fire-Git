@@ -1,5 +1,5 @@
 import React from 'react';
-import type { MediaBlock } from '../../interfaces';
+import type { MediaBlock, MediaItem } from '../../interfaces';
 import './EditorStyles.css';
 
 interface MediaFormProps {
@@ -8,14 +8,14 @@ interface MediaFormProps {
 }
 
 const MediaForm: React.FC<MediaFormProps> = ({ block, onChange }) => {
-  const handleItemChange = (index: number, field: string, value: string) => {
+  const handleItemChange = (index: number, field: keyof MediaItem, value: string) => {
     const newItems = [...block.items];
     newItems[index] = { ...newItems[index], [field]: value };
     onChange({ ...block, items: newItems });
   };
 
   const handleAddItem = () => {
-    const newItem = { type: 'image', url: '', caption: '' };
+    const newItem: MediaItem = { type: 'image', url: '', caption: '' };
     onChange({ ...block, items: [...block.items, newItem] });
   };
 

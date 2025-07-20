@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import './Login.css';
 import { auth, db } from './firebaseConfig';
@@ -9,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleAuthAction = async () => {
     setError('');
@@ -27,13 +29,10 @@ const Login = () => {
         // Log in an existing user
         await signInWithEmailAndPassword(auth, email, password);
       }
+      navigate('/'); // Redirect to home page on success
     } catch (error: any) {
       setError(`Failed to ${isRegistering ? 'register' : 'login'}. ${error.message}`);
     }
-  };
-
-  const handleLogout = () => {
-    signOut(auth);
   };
 
   return (

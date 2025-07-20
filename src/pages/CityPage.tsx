@@ -1,5 +1,5 @@
 import React from 'react';
-import { CityPage as CityPageProps } from '../interfaces';
+import type { CityPage as CityPageProps } from '../interfaces';
 import './PageStyles.css';
 
 const CityPage: React.FC<{ page: CityPageProps }> = ({ page }) => {

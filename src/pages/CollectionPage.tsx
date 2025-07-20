@@ -1,5 +1,5 @@
 import React from 'react';
-import { CollectionPage as CollectionPageProps } from '../interfaces';
+import type { CollectionPage as CollectionPageProps } from '../interfaces';
 import './PageStyles.css';
 
 const CollectionPage: React.FC<{ page: CollectionPageProps }> = ({ page }) => {

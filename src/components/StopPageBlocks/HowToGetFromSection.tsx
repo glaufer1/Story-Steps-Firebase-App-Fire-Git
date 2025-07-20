@@ -1,15 +1,14 @@
 import React from 'react';
-import { HowToGetFromBlock } from '../../interfaces';
+import type { HowToGetFromBlock } from '../../interfaces';
 import Map, { Marker, Source, Layer } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './BlockStyles.css';
+import { MAPBOX_TOKEN } from '../../constants';
 
 interface HowToGetFromSectionProps {
   block: HowToGetFromBlock;
   userLocation?: { latitude: number; longitude: number };
 }
-
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_PUBLIC_TOKEN;
 
 const HowToGetFromSection: React.FC<HowToGetFromSectionProps> = ({ block, userLocation }) => {
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StopPage as StopPageProps, ContentBlock } from '../interfaces';
+import type { StopPage as StopPageProps, ContentBlock } from '../interfaces';
 
 // Import all the block components
 import TextSection from '../components/StopPageBlocks/TextSection';
