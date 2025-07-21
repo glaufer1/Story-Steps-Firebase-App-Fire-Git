@@ -25,6 +25,7 @@ import type { User } from 'firebase/auth';
 import AuthWrapper from './components/AuthWrapper';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminLayout from './components/AdminLayout';
+import Header from './components/Header';
 
 function App() {
   const [user, setUser] = useState<AppUser | null>(null);
@@ -56,30 +57,33 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<AuthWrapper user={user} />} />
-        <Route path="/landing" element={<LandingPage />} />
-        <Route path="/login" element={<Login user={user} />} />
+      <Header />
+      <div className="content-wrap">
+        <Routes>
+          <Route path="/" element={<AuthWrapper user={user} />} />
+          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/login" element={<Login user={user} />} />
 
-        {/* Protected Application Routes */}
-        <Route element={<ProtectedRoute user={user} />}>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/tours" element={<ToursPage />} />
-          <Route path="/cities" element={<CityToursPage />} />
-          <Route path="/about" element={<AboutUsPage />} />
-          <Route path="/blog" element={<BlogPage />} />
+          {/* Protected Application Routes */}
+          <Route element={<ProtectedRoute user={user} />}>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/tours" element={<ToursPage />} />
+            <Route path="/cities" element={<CityToursPage />} />
+            <Route path="/about" element={<AboutUsPage />} />
+            <Route path="/blog" element={<BlogPage />} />
 
-          {/* Admin Routes with Navbar */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminPage />} />
-            <Route path="tour-creator" element={<TourCreatorPage />} />
-            <Route path="edit-tour" element={<EditTourListPage />} />
-            <Route path="tour-editor/:tourId" element={<TourEditorPage />} />
-            <Route path="user-management" element={<UserManagementPage />} />
-            <Route path="city-management" element={<CityManagementPage />} />
+            {/* Admin Routes with Navbar */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminPage />} />
+              <Route path="tour-creator" element={<TourCreatorPage />} />
+              <Route path="edit-tour" element={<EditTourListPage />} />
+              <Route path="tour-editor/:tourId" element={<TourEditorPage />} />
+              <Route path="user-management" element={<UserManagementPage />} />
+              <Route path="city-management" element={<CityManagementPage />} />
+            </Route>
           </Route>
-        </Route>
-      </Routes>
+        </Routes>
+      </div>
     </Router>
   );
 }

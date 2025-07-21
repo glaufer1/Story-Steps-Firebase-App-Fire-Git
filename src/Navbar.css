@@ -1,11 +1,18 @@
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 1rem 2rem;
   background-color: #429af6;
   box-shadow: 0 4px 8px 0 #ff8a00;
   color: #000000;
+  gap: 2rem; /* Adds space between the items */
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box; /* Ensures padding is included in the width */
 }
 
 .navbar-brand {

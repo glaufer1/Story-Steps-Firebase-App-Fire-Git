@@ -1,39 +1,12 @@
-import React, { useState } from 'react';
-import type { AppUser } from '../interfaces';
+import React from 'react';
 import './Header.css';
-import { Link } from 'react-router-dom';
 
-interface HeaderProps {
-  user: AppUser | null;
-}
-
-const Header: React.FC<HeaderProps> = ({ user }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-  
-  const isPrivilegedUser = user?.role === 'Admin' || user?.role === 'Creator';
+const Header: React.FC = () => {
+  const logoUrl = 'https://firebasestorage.googleapis.com/v0/b/story-steps-app-fire.appspot.com/o/Backend%20Logo.png?alt=media&token=df18ab90-e927-428f-90cd-9d0269f403c6';
 
   return (
     <header className="app-header">
-      <div className="logo">Story Steps</div>
-      <nav>
-        <button className="menu-toggle" onClick={toggleMenu}>
-          &#9776; {/* Hamburger Icon */}
-        </button>
-        <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
-          <li><Link to="/home">Home</Link></li>
-          <li><Link to="/cities">Cities</Link></li>
-          <li><Link to="/tours">Tours</Link></li>
-          <li><Link to="/about">About Us</Link></li>
-          <li><Link to="/blog">Blog</Link></li>
-          {isPrivilegedUser && (
-            <li><Link to="/admin" className="admin-link">Admin</Link></li>
-          )}
-        </ul>
-      </nav>
+      <img src={logoUrl} alt="Story Steps Logo" className="app-logo" />
     </header>
   );
 };

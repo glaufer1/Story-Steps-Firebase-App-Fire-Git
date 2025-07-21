@@ -5,6 +5,10 @@
   text-align: center;
 }
 
+.content-wrap {
+  padding-top: 60px; /* Adjust this value based on the actual height of your navbar */
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

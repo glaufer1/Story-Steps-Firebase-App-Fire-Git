@@ -1,17 +1,22 @@
 /* src/components/AdminNavbar.css */
 .admin-navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* This will push the logo to the left and links to the right */
   align-items: center;
-  background-color: #333;
+  background-color: #add8e6; /* Light blue background */
   padding: 0.5rem 2rem;
   color: #000000;
+  gap: 2rem; /* Adds space between the items */
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-sizing: border-box; /* Ensures padding is included in the width */
 }
 
-.admin-navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #000000;
+.admin-navbar-brand img {
+  height: 40px; /* Adjust as needed */
 }
 
 .admin-navbar-links {
@@ -19,6 +24,8 @@
   display: flex;
   margin: 0;
   padding: 0;
+  justify-content: center; /* This will center the links */
+  flex-grow: 1; /* This will allow the links to take up the remaining space */
 }
 
 .admin-navbar-links li {
