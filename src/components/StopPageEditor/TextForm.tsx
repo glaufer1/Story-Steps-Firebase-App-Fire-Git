@@ -1,21 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { TextBlock } from '../../interfaces';
-import './EditorStyles.css';
 
 interface TextFormProps {
   block: TextBlock;
-  onChange: (updatedBlock: TextBlock) => void;
+  onUpdate: (block: TextBlock) => void;
 }
 
-const TextForm: React.FC<TextFormProps> = ({ block, onChange }) => {
+const TextForm: React.FC<TextFormProps> = ({ block, onUpdate }) => {
+  const [content, setContent] = useState(block.content);
+
+  const handleUpdate = () => {
+    onUpdate({ ...block, content });
+  };
+
   return (
-    <div className="block-form">
-      <h4>Text Block</h4>
+    <div>
       <textarea
-        value={block.content}
-        onChange={(e) => onChange({ ...block, content: e.target.value })}
-        placeholder="Enter your formatted text (HTML)"
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        placeholder="Text Content"
       />
+      <button onClick={handleUpdate}>Update</button>
     </div>
   );
 };

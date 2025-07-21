@@ -1,39 +1,44 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { Navigate } from 'react-router-dom';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
 import './Login.css';
-import { auth, db } from './firebaseConfig';
+import { auth } from './firebaseConfig';
+import type { AppUser } from './interfaces';
 
-const Login = () => {
+interface LoginProps {
+  user: AppUser | null;
+}
+
+const Login: React.FC<LoginProps> = ({ user }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleAuthAction = async () => {
     setError('');
 
+    if (!email || !password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+
     try {
       if (isRegistering) {
-        // Register a new user
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        // Assign 'Customer' role to the new user
-        await setDoc(doc(db, "users", user.uid), {
-          role: 'Customer',
-          email: user.email
-        });
+        await createUserWithEmailAndPassword(auth, email, password);
       } else {
-        // Log in an existing user
         await signInWithEmailAndPassword(auth, email, password);
       }
-      navigate('/'); // Redirect to home page on success
-    } catch (error: any) {
-      setError(`Failed to ${isRegistering ? 'register' : 'login'}. ${error.message}`);
+    } catch (err: unknown) {
+        const authError = err as AuthError;
+        setError(`Failed to ${isRegistering ? 'register' : 'login'}. ${authError.message}`);
     }
   };
+
+  if (user) {
+    const targetPath = (user.role === 'Admin' || user.role === 'Creator') ? '/admin' : '/home';
+    return <Navigate to={targetPath} replace />;
+  }
 
   return (
     <div className="login-container">

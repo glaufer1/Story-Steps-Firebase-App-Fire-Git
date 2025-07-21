@@ -1,44 +1,42 @@
 .login-container {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  margin: 100px auto;
-  padding: 20px;
-  border: 1px solid #444; /* Darker border */
-  border-radius: 5px;
-  background-color: #333; /* Dark background */
-  color: #eee; /* Light text */
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .login-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  color: #333;
 }
 
 .login-container input {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #666; /* Darker border for inputs */
-  border-radius: 3px;
-  background-color: #444; /* Dark input background */
-  color: #eee; /* Light text for inputs */
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .login-container button {
-  padding: 10px;
-  background-color: #646cff; /* Consistent button color */
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 3px;
+  border-radius: 4px;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .login-container button:hover {
-  background-color: #535bf2; /* Consistent button hover color */
+  background-color: #0056b3;
 }
 
-.login-container p {
-  color: #ff6b6b; /* A lighter red for error messages */
-  text-align: center;
-  margin-top: 10px;
+.login-container .error {
+  color: #dc3545;
+  margin-top: 15px;
 }

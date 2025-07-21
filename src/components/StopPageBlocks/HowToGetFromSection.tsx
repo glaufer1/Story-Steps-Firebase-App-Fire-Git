@@ -1,56 +1,44 @@
 import React from 'react';
 import type { HowToGetFromBlock } from '../../interfaces';
-import Map, { Marker, Source, Layer } from 'react-map-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import './BlockStyles.css';
-import { MAPBOX_TOKEN } from '../../constants';
+import { GoogleMap, LoadScript, DirectionsService, DirectionsRenderer } from '@react-google-maps/api';
 
-interface HowToGetFromSectionProps {
-  block: HowToGetFromBlock;
-  userLocation?: { latitude: number; longitude: number };
-}
+const containerStyle = {
+  width: '100%',
+  height: '400px'
+};
 
-const HowToGetFromSection: React.FC<HowToGetFromSectionProps> = ({ block, userLocation }) => {
+const HowToGetFromSection: React.FC<{ block: HowToGetFromBlock }> = ({ block }) => {
+  const [directions, setDirections] = React.useState<google.maps.DirectionsResult | null>(null);
 
-  const routeLayer: any = {
-    id: 'route',
-    type: 'line',
-    source: 'route',
-    layout: { 'line-join': 'round', 'line-cap': 'round' },
-    paint: { 'line-color': '#007bff', 'line-width': 5 }
+  const waypoints = block.pins.slice(1, -1).map(p => ({ location: { lat: p.latitude, lng: p.longitude }, stopover: true }));
+
+  const directionsCallback = (response: google.maps.DirectionsResult | null, status: google.maps.DirectionsStatus) => {
+    if (status === 'OK' && response) {
+      setDirections(response);
+    }
   };
-  
-  if (!MAPBOX_TOKEN) {
-    return <div className="error-message">Mapbox token is not configured.</div>;
-  }
 
   return (
-    <div className="stop-page-block">
-      <div className="map-container">
-        <Map
-          initialViewState={{
-            longitude: block.pins[0]?.longitude || -74.0060,
-            latitude: block.pins[0]?.latitude || 40.7128,
-            zoom: 13
-          }}
-          style={{ width: '100%', height: 400, borderRadius: '8px' }}
-          mapStyle="mapbox://styles/mapbox/streets-v9"
-          mapboxAccessToken={MAPBOX_TOKEN}
-        >
-          <Source id="route" type="geojson" data={block.routeData}>
-            <Layer {...routeLayer} />
-          </Source>
-
-          {block.pins.map(pin => (
-            <Marker key={pin.id} longitude={pin.longitude} latitude={pin.latitude} color={pin.color.toLowerCase()} />
-          ))}
-
-          {userLocation && (
-            <Marker longitude={userLocation.longitude} latitude={userLocation.latitude} color="blue" />
-          )}
-        </Map>
-      </div>
-    </div>
+    <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={{ lat: block.pins[0].latitude, lng: block.pins[0].longitude }}
+        zoom={10}
+      >
+        {block.pins.length > 1 && (
+          <DirectionsService
+            options={{
+              origin: { lat: block.pins[0].latitude, lng: block.pins[0].longitude },
+              destination: { lat: block.pins[block.pins.length - 1].latitude, lng: block.pins[block.pins.length - 1].longitude },
+              waypoints: waypoints,
+              travelMode: google.maps.TravelMode.DRIVING
+            }}
+            callback={directionsCallback}
+          />
+        )}
+        {directions && <DirectionsRenderer options={{ directions }} />}
+      </GoogleMap>
+    </LoadScript>
   );
 };
 

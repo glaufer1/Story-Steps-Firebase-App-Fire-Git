@@ -1,53 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { SocialMediaBlock } from '../../interfaces';
-import './EditorStyles.css';
 
 interface SocialMediaFormProps {
   block: SocialMediaBlock;
-  onChange: (updatedBlock: SocialMediaBlock) => void;
+  onUpdate: (block: SocialMediaBlock) => void;
 }
 
-const SocialMediaForm: React.FC<SocialMediaFormProps> = ({ block, onChange }) => {
-    const handleLinkChange = (index: number, field: string, value: string) => {
-        const newLinks = [...block.links];
-        newLinks[index] = { ...newLinks[index], [field]: value };
-        onChange({ ...block, links: newLinks });
-    };
+const SocialMediaForm: React.FC<SocialMediaFormProps> = ({ block, onUpdate }) => {
+  const [links, setLinks] = useState(block.links);
 
-    const handleAddLink = () => {
-        onChange({ ...block, links: [...block.links, { platform: 'Website', url: '' }] });
-    };
+  const handleLinkChange = (index: number, field: 'platform' | 'url', value: string) => {
+    const newLinks = [...links];
+    newLinks[index][field] = value;
+    setLinks(newLinks);
+    onUpdate({ ...block, links: newLinks });
+  };
 
-    const handleRemoveLink = (index: number) => {
-        onChange({ ...block, links: block.links.filter((_, i) => i !== index) });
-    };
+  const addLink = () => {
+    setLinks([...links, { platform: '', url: '' }]);
+  };
 
-    return (
-        <div className="block-form">
-            <h4>Social Media Block</h4>
-            {block.links.map((link, index) => (
-                <div key={index} className="form-group-box">
-                    <label>Link #{index + 1}</label>
-                    <div className="form-grid">
-                        <select value={link.platform} onChange={(e) => handleLinkChange(index, 'platform', e.target.value)}>
-                            <option value="Website">Website</option>
-                            <option value="Facebook">Facebook</option>
-                            <option value="Twitter">Twitter</option>
-                            <option value="Instagram">Instagram</option>
-                        </select>
-                        <input
-                            type="text"
-                            placeholder="URL"
-                            value={link.url}
-                            onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
-                        />
-                    </div>
-                    <button className="remove-btn" onClick={() => handleRemoveLink(index)}>Remove</button>
-                </div>
-            ))}
-            <button className="add-btn" onClick={handleAddLink}>Add Social Link</button>
+  const removeLink = (index: number) => {
+    const newLinks = links.filter((_, i) => i !== index);
+    setLinks(newLinks);
+    onUpdate({ ...block, links: newLinks });
+  };
+
+  return (
+    <div>
+      {links.map((link, index) => (
+        <div key={index}>
+          <input
+            type="text"
+            value={link.platform}
+            onChange={(e) => handleLinkChange(index, 'platform', e.target.value)}
+            placeholder="Platform"
+          />
+          <input
+            type="text"
+            value={link.url}
+            onChange={(e) => handleLinkChange(index, 'url', e.target.value)}
+            placeholder="URL"
+          />
+          <button onClick={() => removeLink(index)}>Remove</button>
         </div>
-    );
+      ))}
+      <button onClick={addLink}>Add Link</button>
+    </div>
+  );
 };
 
 export default SocialMediaForm;

@@ -1,156 +1,157 @@
-// A legacy interface for the original tour creation feature
-export interface Tour {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  stops: google.maps.LatLngLiteral[];
-}
-
+// src/interfaces.ts
 export interface AppUser {
   uid: string;
   email: string | null;
   role: 'Admin' | 'Creator' | 'Customer';
 }
 
-// Base Page and Tour-level interfaces
-export interface Page {
-    id:string;
-    type: 'City' | 'PrePurchaseTour' | 'PostPurchaseTour' | 'Stop' | 'Collection';
-    title: string;
-    description: string;
-    imageUrl?: string;
+export interface Tour {
+  id: string;
+  title: string;
+  description: string;
+  city: string;
+  price?: number;
+  stops?: Stop[];
 }
 
-export interface CityPage extends Page { type: 'City'; tours: string[]; }
+export interface Stop {
+  id: string;
+  name: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  heroImageUrl?: string;
+  title?: string;
+}
+
+export enum PageType {
+  CityPage = 'CityPage',
+  CollectionPage = 'CollectionPage',
+  PrePurchaseTourPage = 'PrePurchaseTourPage',
+  PostPurchaseTourPage = 'PostPurchaseTourPage',
+  StopPage = 'StopPage',
+}
+
+export interface Page {
+  id: string;
+  title: string;
+  type: PageType;
+}
+
+export interface CityPage extends Page {
+  imageUrl?: string;
+  description?: string;
+}
+
+export interface CollectionPage extends Page {
+  imageUrl?: string;
+  description?: string;
+}
 
 export interface PrePurchaseTourPage extends Page {
-  type: 'PrePurchaseTour';
-  distance: number;
-  stops: Stop[];
-  travelMode: string;
-  previewAudioUrl: string;
-  price: number;
+  imageUrl?: string;
+  distance?: string;
+  stops?: Stop[];
+  travelMode?: string;
+  previewAudioUrl?: string;
+  description?: string;
+  price?: number;
 }
 
 export interface PostPurchaseTourPage extends Page {
-  type: 'PostPurchaseTour';
-  preDepartureHeroImageUrl: string;
-  preDepartureAudioUrl: string;
-  stops: Stop[];
-  totalSizeMB: number;
-  tourTime: string;
-}
-
-export interface CollectionPage extends Page { type: 'Collection'; }
-
-// --- NEW MODULAR CONTENT BLOCKS for StopPage ---
-
-export type BlockType = 'text' | 'media' | 'openingTimes' | 'links' | 'imageSlider' | 'location' | 'howToGetFrom' | 'social';
-
-export interface BaseBlock {
-    id: string; // Unique ID for each block instance
-    type: BlockType;
-    order: number; // To determine display sequence
-}
-
-export interface TextBlock extends BaseBlock {
-    type: 'text';
-    content: string; // HTML content from a rich text editor
-}
-
-export interface MediaItem {
-    type: 'image' | 'audio' | 'video';
-    url: string; // URL to the asset or YouTube embed
-    caption?: string;
-}
-
-export interface MediaBlock extends BaseBlock {
-    type: 'media';
-    items: MediaItem[];
-}
-
-export interface OpeningTimesBlock extends BaseBlock {
-    type: 'openingTimes';
-    times: {
-        day: string; // e.g., "Monday"
-        opens: string; // e.g., "9:00 AM"
-        closes: string; // e.g., "5:00 PM"
-    }[];
-}
-
-export interface LinkButtonBlock extends BaseBlock {
-    type: 'links';
-    title: string;
-    buttons: {
-        text: string;
-        url: string; // Can be internal or external
-    }[];
-}
-
-export interface ImageSliderBlock extends BaseBlock {
-    type: 'imageSlider';
-    imageUrl1: string;
-    imageUrl2: string;
-}
-
-export interface LocationBlock extends BaseBlock {
-    type: 'location';
-    mapType: 'Start Point' | 'End Point';
-    address: string;
-    latitude: number;
-    longitude: number;
-}
-export interface Pin {
-    id: string;
-    latitude: number;
-    longitude: number;
-    color: 'Blue' | 'Yellow' | 'Green' | 'Red' | 'Purple' | 'Orange';
-    label?: string;
-}
-export interface HowToGetFromBlock extends BaseBlock {
-    type: 'howToGetFrom';
-    startAddress: string;
-    endAddress: string;
-    // This will store the GeoJSON data for the route drawn by the creator
-    routeData: any; 
-    pins: Pin[];
-}
-
-export interface SocialMediaBlock extends BaseBlock {
-    type: 'social';
-    links: {
-        platform: 'Facebook' | 'Twitter' | 'Instagram' | 'Website';
-        url: string;
-    }[];
-}
-
-export type ContentBlock = TextBlock | MediaBlock | OpeningTimesBlock | LinkButtonBlock | ImageSliderBlock | LocationBlock | HowToGetFromBlock | SocialMediaBlock;
-
-// --- UPDATED StopPage Interface ---
-
-export interface Stop {
-    id: string;
-    title: string;
-    heroImageUrl: string;
-    audioFileUrl: string;
-    videoUrl?: string;
+  preDepartureHeroImageUrl?: string;
+  preDepartureAudioUrl?: string;
+  stops?: Stop[];
+  totalSizeMB?: string;
+  imageUrl?: string;
+  tourTime?: string;
+  description?: string;
 }
 
 export interface StopPage extends Page {
-    type: 'Stop';
-    
-    // Fixed Top Section data
-    heroImageUrl: string;
-    audioFileUrl: string;
-    audioFileTitle: string;
-    audioGraphicUrl?: string; // Optional graphic behind play button
-    
-    // Geofencing data
-    latitude: number;
-    longitude: number;
-    geoFenceRadius: number; // in meters
-    
-    // Dynamic content blocks
-    contentBlocks: ContentBlock[];
+  latitude?: number;
+  longitude?: number;
+  geoFenceRadius?: number;
+  contentBlocks?: ContentBlock[];
+  heroImageUrl?: string;
+  audioFileUrl?: string;
+  audioFileTitle?: string;
+}
+
+export enum BlockType {
+  Text = 'Text',
+  Media = 'Media',
+  Location = 'Location',
+  HowToGetFrom = 'HowToGetFrom',
+  LinkButton = 'LinkButton',
+  SocialMedia = 'SocialMedia',
+  OpeningTimes = 'OpeningTimes',
+  ImageSlider = 'ImageSlider',
+}
+
+export interface ContentBlock {
+  id: string;
+  type: BlockType;
+  order: number;
+}
+
+export interface TextBlock extends ContentBlock {
+  type: BlockType.Text;
+  content: string;
+}
+
+export interface MediaItem {
+  url: string;
+  caption?: string;
+  type?: 'image' | 'video' | 'audio';
+}
+
+export interface MediaBlock extends ContentBlock {
+  type: BlockType.Media;
+  items: MediaItem[];
+}
+
+export interface LocationBlock extends ContentBlock {
+  type: BlockType.Location;
+  latitude: number;
+  longitude: number;
+  address: string;
+  mapType?: string;
+}
+
+export interface Pin {
+  id: string;
+  label: string;
+  latitude: number;
+  longitude: number;
+  color?: string;
+}
+export interface HowToGetFromBlock extends ContentBlock {
+  type: BlockType.HowToGetFrom;
+  pins: Pin[];
+  routeData?: any;
+}
+
+export interface LinkButtonBlock extends ContentBlock {
+  type: BlockType.LinkButton;
+  title?: string;
+  buttons: { text: string; url: string }[];
+}
+
+export interface SocialMediaBlock extends ContentBlock {
+  type: BlockType.SocialMedia;
+  links: { platform: string; url: string }[];
+}
+
+export interface OpeningTimesBlock extends ContentBlock {
+  type: BlockType.OpeningTimes;
+  times: { day: string; open: string; close: string }[];
+}
+
+export interface ImageSliderBlock extends ContentBlock {
+  type: BlockType.ImageSlider;
+  images: string[];
+  imageUrl1?: string;
+  imageUrl2?: string;
 }

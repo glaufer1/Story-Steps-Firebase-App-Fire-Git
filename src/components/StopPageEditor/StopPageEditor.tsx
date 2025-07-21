@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { v4 as uuidv4 } from 'uuid';
-
-import type { StopPage, ContentBlock, BlockType, TextBlock, MediaBlock, LocationBlock, HowToGetFromBlock, LinkButtonBlock, SocialMediaBlock, OpeningTimesBlock, ImageSliderBlock } from '../../interfaces';
-import Modal from '../Modal';
-import GeoFenceForm from './GeoFenceForm';
-
-// Import all form components
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../firebaseConfig';
+import type {
+  StopPage,
+  ContentBlock,
+  TextBlock,
+  MediaBlock,
+  LocationBlock,
+  HowToGetFromBlock,
+  LinkButtonBlock,
+  SocialMediaBlock,
+  OpeningTimesBlock,
+  ImageSliderBlock,
+} from '../../interfaces';
+import { BlockType } from '../../interfaces';
 import TextForm from './TextForm';
 import MediaForm from './MediaForm';
 import LocationForm from './LocationForm';
@@ -19,126 +24,141 @@ import SocialMediaForm from './SocialMediaForm';
 import OpeningTimesForm from './OpeningTimesForm';
 import ImageSliderForm from './ImageSliderForm';
 
-interface StopPageEditorProps {
-  page: StopPage;
-  onSave: (updatedPage: StopPage) => void;
-}
+const StopPageEditor: React.FC = () => {
+  const { pageId } = useParams<{ pageId: string }>();
+  const [page, setPage] = useState<StopPage | null>(null);
+  const [loading, setLoading] = useState(true);
 
-const renderBlockForm = (block: ContentBlock, onChange: (updatedBlock: ContentBlock) => void) => {
-    switch (block.type) {
-        case 'text': return <TextForm block={block as TextBlock} onChange={onChange} />;
-        case 'media': return <MediaForm block={block as MediaBlock} onChange={onChange} />;
-        case 'location': return <LocationForm block={block as LocationBlock} onChange={onChange} />;
-        case 'howToGetFrom': return <HowToGetFromForm block={block as HowToGetFromBlock} onChange={onChange} />;
-        case 'links': return <LinkButtonForm block={block as LinkButtonBlock} onChange={onChange} />;
-        case 'social': return <SocialMediaForm block={block as SocialMediaBlock} onChange={onChange} />;
-        case 'openingTimes': return <OpeningTimesForm block={block as OpeningTimesBlock} onChange={onChange} />;
-        case 'imageSlider': return <ImageSliderForm block={block as ImageSliderBlock} onChange={onChange} />;
-        default: {
-            const exhaustiveCheck: never = block;
-            return <p>Unsupported block type: {exhaustiveCheck}</p>;
+  useEffect(() => {
+    if (pageId) {
+      const fetchPage = async () => {
+        const pageDoc = await getDoc(doc(db, 'pages', pageId));
+        if (pageDoc.exists()) {
+          setPage(pageDoc.data() as StopPage);
         }
+        setLoading(false);
+      };
+      fetchPage();
     }
-};
+  }, [pageId]);
 
-const StopPageEditor: React.FC<StopPageEditorProps> = ({ page, onSave }) => {
-    const [pageDetails, setPageDetails] = useState({
-        latitude: page.latitude,
-        longitude: page.longitude,
-        geoFenceRadius: page.geoFenceRadius
-    });
-    const [contentBlocks, setContentBlocks] = useState<ContentBlock[]>(page.contentBlocks);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleUpdateBlock = (updatedBlock: ContentBlock) => {
+    if (page) {
+      const updatedContentBlocks =
+        page.contentBlocks?.map((block) =>
+          block.id === updatedBlock.id ? updatedBlock : block
+        ) || [];
+      const updatedPage = { ...page, contentBlocks: updatedContentBlocks };
+      setPage(updatedPage);
+      if (pageId) {
+        updateDoc(doc(db, 'pages', pageId), updatedPage);
+      }
+    }
+  };
 
-    const sensors = useSensors(
-        useSensor(PointerSensor),
-        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-    );
+  const addBlock = (type: BlockType) => {
+    if (page) {
+      const newBlock: ContentBlock = {
+        id: `block-${Date.now()}`,
+        type,
+        order: page.contentBlocks?.length || 0,
+      } as ContentBlock;
 
-    const handleDragEnd = (event: any) => {
-        const { active, over } = event;
-        if (active.id !== over.id) {
-            const oldIndex = contentBlocks.findIndex((item) => item.id === active.id);
-            const newIndex = contentBlocks.findIndex((item) => item.id === over.id);
-            const newItems = arrayMove(contentBlocks, oldIndex, newIndex);
-            setContentBlocks(newItems.map((item, index) => ({ ...item, order: index })));
+      const updatedPage = {
+        ...page,
+        contentBlocks: [...(page.contentBlocks || []), newBlock],
+      };
+      setPage(updatedPage);
+      if (pageId) {
+        updateDoc(doc(db, 'pages', pageId), updatedPage);
+      }
+    }
+  };
+
+
+  if (loading) return <p>Loading...</p>;
+  if (!page) return <p>Page not found</p>;
+
+  return (
+    <div>
+      <h2>Editing Stop Page: {page.title}</h2>
+      <div>
+        <button onClick={() => addBlock(BlockType.Text)}>Add Text Block</button>
+        <button onClick={() => addBlock(BlockType.Media)}>Add Media Block</button>
+        {/* Add buttons for other block types */}
+      </div>
+      {page.contentBlocks?.map((block) => {
+        switch (block.type) {
+          case BlockType.Text:
+            return (
+              <TextForm
+                key={block.id}
+                block={block as TextBlock}
+                onUpdate={handleUpdateBlock}
+              />
+            );
+          case BlockType.Media:
+            return (
+              <MediaForm
+                key={block.id}
+                block={block as MediaBlock}
+                onUpdate={handleUpdateBlock}
+              />
+            );
+          case BlockType.Location:
+            return (
+              <LocationForm
+                key={block.id}
+                block={block as LocationBlock}
+                onUpdate={handleUpdateBlock}
+              />
+            );
+          case BlockType.HowToGetFrom:
+            return (
+              <HowToGetFromForm
+                key={block.id}
+                block={block as HowToGetFromBlock}
+                onUpdate={handleUpdateBlock}
+              />
+            );
+          case BlockType.LinkButton:
+            return (
+              <LinkButtonForm
+                key={block.id}
+                block={block as LinkButtonBlock}
+                onUpdate={handleUpdateBlock}
+              />
+            );
+          case BlockType.SocialMedia:
+            return (
+              <SocialMediaForm
+                key={block.id}
+                block={block as SocialMediaBlock}
+                onUpdate={handleUpdateBlock}
+              />
+            );
+          case BlockType.OpeningTimes:
+            return (
+              <OpeningTimesForm
+                key={block.id}
+                block={block as OpeningTimesBlock}
+                onUpdate={handleUpdateBlock}
+              />
+            );
+          case BlockType.ImageSlider:
+            return (
+              <ImageSliderForm
+                key={block.id}
+                block={block as ImageSliderBlock}
+                onUpdate={handleUpdateBlock}
+              />
+            );
+          default:
+            return null;
         }
-    };
-
-    const handleBlockChange = (updatedBlock: ContentBlock) => {
-        setContentBlocks(current => current.map(b => b.id === updatedBlock.id ? updatedBlock : b));
-    };
-
-    const handleAddNewBlock = (type: BlockType) => {
-        let newBlock: ContentBlock;
-        switch (type) {
-            case 'text': newBlock = { id: uuidv4(), type, order: contentBlocks.length, content: 'New Text Block' }; break;
-            case 'media': newBlock = { id: uuidv4(), type, order: contentBlocks.length, items: [] }; break;
-            case 'location': newBlock = { id: uuidv4(), type, order: contentBlocks.length, latitude: 0, longitude: 0, mapType: 'Start Point', address: '' }; break;
-            case 'howToGetFrom': newBlock = { id: uuidv4(), type, order: contentBlocks.length, routeData: { type: 'FeatureCollection', features: [] }, pins: [], startAddress: '', endAddress: '' }; break;
-            case 'links': newBlock = { id: uuidv4(), type, order: contentBlocks.length, title: 'Useful Links', buttons: [] }; break;
-            case 'social': newBlock = { id: uuidv4(), type, order: contentBlocks.length, links: [] }; break;
-            case 'openingTimes': newBlock = { id: uuidv4(), type, order: contentBlocks.length, times: [] }; break;
-            case 'imageSlider': newBlock = { id: uuidv4(), type, order: contentBlocks.length, imageUrl1: '', imageUrl2: '' }; break;
-            default: {
-                const exhaustiveCheck: never = type;
-                throw new Error(`Unsupported block type: ${exhaustiveCheck}`);
-            }
-        }
-        setContentBlocks(current => [...current, newBlock]);
-        setIsModalOpen(false);
-    };
-
-    const handleSave = () => {
-        const updatedPage: StopPage = { ...page, ...pageDetails, contentBlocks };
-        onSave(updatedPage);
-    };
-
-    const availableBlockTypes: BlockType[] = ['text', 'media', 'location', 'howToGetFrom', 'links', 'social', 'imageSlider', 'openingTimes'];
-
-    return (
-        <div className="stop-page-editor">
-            <h2>Editing: {page.title}</h2>
-            <GeoFenceForm latitude={pageDetails.latitude} longitude={pageDetails.longitude} radius={pageDetails.geoFenceRadius}
-                onLatitudeChange={(val) => setPageDetails(d => ({ ...d, latitude: val }))}
-                onLongitudeChange={(val) => setPageDetails(d => ({ ...d, longitude: val }))}
-                onRadiusChange={(val) => setPageDetails(d => ({ ...d, geoFenceRadius: val }))}
-            />
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={contentBlocks.map(b => b.id)} strategy={verticalListSortingStrategy}>
-                    {contentBlocks.map(block => (
-                        <SortableItem key={block.id} id={block.id}>
-                            {renderBlockForm(block, handleBlockChange)}
-                        </SortableItem>
-                    ))}
-                </SortableContext>
-            </DndContext>
-            <div className="editor-actions">
-                <button onClick={() => setIsModalOpen(true)}>Add New Block</button>
-                <button onClick={handleSave}>Save Changes</button>
-            </div>
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h3>Select a Block to Add</h3>
-                <div className="block-selection">
-                    {availableBlockTypes.map(type => (
-                        <button key={type} onClick={() => handleAddNewBlock(type)}>
-                            {type.charAt(0).toUpperCase() + type.slice(1).replace(/([A-Z])/g, ' $1')} Block
-                        </button>
-                    ))}
-                </div>
-            </Modal>
-        </div>
-    );
-};
-
-const SortableItem: React.FC<{ id: string, children: React.ReactNode }> = ({ id, children }) => {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-    const style = { transform: CSS.Transform.toString(transform), transition };
-    return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-            {children}
-        </div>
-    );
+      })}
+    </div>
+  );
 };
 
 export default StopPageEditor;

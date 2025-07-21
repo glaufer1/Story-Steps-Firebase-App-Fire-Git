@@ -1,56 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { LinkButtonBlock } from '../../interfaces';
-import './EditorStyles.css';
 
 interface LinkButtonFormProps {
   block: LinkButtonBlock;
-  onChange: (updatedBlock: LinkButtonBlock) => void;
+  onUpdate: (block: LinkButtonBlock) => void;
 }
 
-const LinkButtonForm: React.FC<LinkButtonFormProps> = ({ block, onChange }) => {
-  const handleButtonChange = (index: number, field: string, value: string) => {
-    const newButtons = [...block.buttons];
-    newButtons[index] = { ...newButtons[index], [field]: value };
-    onChange({ ...block, buttons: newButtons });
+const LinkButtonForm: React.FC<LinkButtonFormProps> = ({ block, onUpdate }) => {
+  const [title, setTitle] = useState(block.title);
+  const [buttons, setButtons] = useState(block.buttons);
+
+  const handleButtonChange = (index: number, field: 'text' | 'url', value: string) => {
+    const newButtons = [...buttons];
+    newButtons[index][field] = value;
+    setButtons(newButtons);
+    onUpdate({ ...block, title, buttons: newButtons });
   };
 
-  const handleAddButton = () => {
-    onChange({ ...block, buttons: [...block.buttons, { text: '', url: '' }] });
+  const addButton = () => {
+    setButtons([...buttons, { text: '', url: '' }]);
   };
 
-  const handleRemoveButton = (index: number) => {
-    onChange({ ...block, buttons: block.buttons.filter((_, i) => i !== index) });
+  const removeButton = (index: number) => {
+    const newButtons = buttons.filter((_, i) => i !== index);
+    setButtons(newButtons);
+    onUpdate({ ...block, title, buttons: newButtons });
   };
 
   return (
-    <div className="block-form">
-      <h4>Link Buttons Block</h4>
-      <label>Title</label>
+    <div>
       <input
         type="text"
-        value={block.title}
-        onChange={(e) => onChange({ ...block, title: e.target.value })}
-        placeholder="e.g., 'More Information'"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
       />
-      {block.buttons.map((button, index) => (
-        <div key={index} className="form-group-box">
-          <label>Button #{index + 1}</label>
+      {buttons.map((button, index) => (
+        <div key={index}>
           <input
             type="text"
-            placeholder="Button Text"
             value={button.text}
             onChange={(e) => handleButtonChange(index, 'text', e.target.value)}
+            placeholder="Button Text"
           />
           <input
             type="text"
-            placeholder="URL"
             value={button.url}
             onChange={(e) => handleButtonChange(index, 'url', e.target.value)}
+            placeholder="Button URL"
           />
-          <button className="remove-btn" onClick={() => handleRemoveButton(index)}>Remove</button>
+          <button onClick={() => removeButton(index)}>Remove</button>
         </div>
       ))}
-      <button className="add-btn" onClick={handleAddButton}>Add Button</button>
+      <button onClick={addButton}>Add Button</button>
     </div>
   );
 };

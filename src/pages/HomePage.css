@@ -1,0 +1,74 @@
+/* General Homepage Styles */
+.homepage-container {
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.homepage-section {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Hero Section */
+.hero-section {
+    background: url('https://storage.googleapis.com/story-steps-app-fire.appspot.com/assets/london-eye.jpeg') no-repeat center center/cover;
+    color: white;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.hero-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Featured Section */
+.featured-section h2 {
+    margin-bottom: 20px;
+}
+
+.featured-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.featured-item {
+    background-color: #f4f4f4;
+    height: 200px;
+    border-radius: 8px;
+}
+
+/* How It Works & About Snippet Sections */
+.how-it-works-section, .about-snippet-section {
+    background-color: #f9f9f9;
+}
+
+.about-snippet-section a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Tablet and Desktop Styles */
+@media (min-width: 768px) {
+    .featured-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+}

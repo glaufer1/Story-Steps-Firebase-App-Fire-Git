@@ -1,168 +1,136 @@
-import React, { useState, useEffect } from 'react';
-import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { GoogleMap, useJsApiLoader, Marker, Polyline } from '@react-google-maps/api';
-import './TourCreator.css';
-import type { Tour } from './interfaces';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc, updateDoc, addDoc, collection } from 'firebase/firestore';
 import { db } from './firebaseConfig';
+import type { Tour, Stop } from './interfaces';
+import './TourCreator.css';
 
-interface TourCreatorProps {
-  tourToEdit: Tour | null;
-  onFinishEditing: () => void;
-}
+const TourCreator = () => {
+  const { tourId } = useParams<{ tourId: string }>();
+  const navigate = useNavigate();
 
-const containerStyle = {
-  width: '100%',
-  height: '400px'
-};
-
-const center = {
-  lat: 40.7128, // Centered on New York City for a better default
-  lng: -74.0060
-};
-
-const polylineOptions = {
-  strokeColor: '#FF0000',
-  strokeOpacity: 0.8,
-  strokeWeight: 2,
-  clickable: false,
-  draggable: false,
-  editable: false,
-  visible: true,
-  zIndex: 1
-};
-
-const GOOGLE_MAPS_API_KEY = "AIzaSyAOED-Gm0NzcE5DYrAT68kSgJDWqr_sjac";
-
-const TourCreator: React.FC<TourCreatorProps> = ({ tourToEdit, onFinishEditing }) => {
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY
-  });
-
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [markers, setMarkers] = useState<google.maps.LatLngLiteral[]>([]);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [tourTitle, setTourTitle] = useState('');
+  const [tourDescription, setTourDescription] = useState('');
+  const [tourPrice, setTourPrice] = useState(0);
+  const [stops, setStops] = useState<Stop[]>([]);
+  const [newStopName, setNewStopName] = useState('');
+  const [newStopLat, setNewStopLat] = useState('');
+  const [newStopLng, setNewStopLng] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (tourToEdit) {
+    if (tourId) {
       setIsEditing(true);
-      setTitle(tourToEdit.title);
-      setDescription(tourToEdit.description);
-      setPrice(tourToEdit.price.toString());
-      setMarkers(tourToEdit.stops || []);
-    } else {
-      setIsEditing(false);
-      // Clear form when not editing
-      setTitle('');
-      setDescription('');
-      setPrice('');
-      setMarkers([]);
+      const fetchTour = async () => {
+        const tourDoc = await getDoc(doc(db, 'tours', tourId));
+        if (tourDoc.exists()) {
+          const tourData = tourDoc.data() as Tour;
+          setTourTitle(tourData.title);
+          setTourDescription(tourData.description);
+          setTourPrice(tourData.price || 0);
+          setStops(tourData.stops || []);
+        }
+      };
+      fetchTour();
     }
-  }, [tourToEdit]);
+  }, [tourId]);
 
-  const onMapClick = (e: google.maps.MapMouseEvent) => {
-    if (e.latLng) {
-      setMarkers(current => [...current, { lat: e.latLng!.lat(), lng: e.latLng!.lng() }]);
+  const handleAddStop = () => {
+    if (newStopName && newStopLat && newStopLng) {
+      const newStop: Stop = {
+        id: `stop-${Date.now()}`,
+        name: newStopName,
+        location: {
+          latitude: parseFloat(newStopLat),
+          longitude: parseFloat(newStopLng),
+        },
+      };
+      setStops([...stops, newStop]);
+      setNewStopName('');
+      setNewStopLat('');
+      setNewStopLng('');
     }
   };
 
-  const handleSave = async () => {
+  const handleSaveTour = async () => {
     setError('');
-    setSuccess('');
-
-    if (!title || !description || !price || markers.length === 0) {
-      setError('Please fill in all fields and add at least one stop to the map.');
-      return;
-    }
-
     const tourData = {
-      title,
-      description,
-      price: parseFloat(price),
-      stops: markers
+      title: tourTitle,
+      description: tourDescription,
+      price: tourPrice,
+      stops: stops,
     };
 
     try {
-      if (isEditing && tourToEdit) {
-        // Update existing tour
-        const tourRef = doc(db, "tours", tourToEdit.id);
-        await updateDoc(tourRef, tourData);
-        setSuccess('Tour updated successfully!');
-        onFinishEditing(); // Clear the form and exit editing mode
+      if (isEditing && tourId) {
+        await updateDoc(doc(db, 'tours', tourId), tourData);
+        navigate(`/tours/${tourId}`);
       } else {
-        // Create new tour
-        await addDoc(collection(db, 'tours'), tourData);
-        setSuccess('Tour created successfully!');
-        // Clear the form fields
-        setTitle('');
-        setDescription('');
-        setPrice('');
-        setMarkers([]);
+        const newTourRef = await addDoc(collection(db, 'tours'), tourData);
+        navigate(`/tours/${newTourRef.id}`);
       }
-    } catch (e) {
-      setError('An error occurred: ' + e);
+    } catch (err) {
+      setError('Failed to save tour. Please try again.');
+      console.error(err);
     }
   };
-  
-  const handleCancel = () => {
-    onFinishEditing();
-  }
-  
-  if (!GOOGLE_MAPS_API_KEY) {
-    return <div className="error-message">Google Maps API key is not configured.</div>;
-  }
 
   return (
-    <div className="tour-creator-container">
+    <div className="tour-creator">
       <h2>{isEditing ? 'Edit Tour' : 'Create a New Tour'}</h2>
       <input
         type="text"
         placeholder="Tour Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        value={tourTitle}
+        onChange={(e) => setTourTitle(e.target.value)}
       />
       <textarea
         placeholder="Tour Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
+        value={tourDescription}
+        onChange={(e) => setTourDescription(e.target.value)}
       />
       <input
         type="number"
         placeholder="Price"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
+        value={tourPrice}
+        onChange={(e) => setTourPrice(parseFloat(e.target.value))}
       />
-      
-      {isLoaded ? (
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-          onClick={onMapClick}
-        >
-          {markers.map((marker, index) => (
-            <Marker key={index} position={marker} />
-          ))}
 
-          {markers.length > 1 && (
-            <Polyline
-              path={markers}
-              options={polylineOptions}
-            />
-          )}
-        </GoogleMap>
-      ) : <div>Loading Map...</div>}
-
-      <div className="actions">
-        <button onClick={handleSave}>{isEditing ? 'Update Tour' : 'Create Tour'}</button>
-        {isEditing && <button onClick={handleCancel} className="cancel">Cancel Edit</button>}
+      <div className="stops-section">
+        <h3>Stops</h3>
+        {stops.map((stop, index) => (
+          <div key={index} className="stop-item">
+            {stop.name} ({stop.location.latitude}, {stop.location.longitude})
+          </div>
+        ))}
+        <div className="add-stop-form">
+          <input
+            type="text"
+            placeholder="Stop Name"
+            value={newStopName}
+            onChange={(e) => setNewStopName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Latitude"
+            value={newStopLat}
+            onChange={(e) => setNewStopLat(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Longitude"
+            value={newStopLng}
+            onChange={(e) => setNewStopLng(e.target.value)}
+          />
+          <button onClick={handleAddStop}>Add Stop</button>
+        </div>
       </div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
+
+      <button onClick={handleSaveTour}>
+        {isEditing ? 'Update Tour' : 'Save Tour'}
+      </button>
+      {error && <p className="error">{error}</p>}
     </div>
   );
 };

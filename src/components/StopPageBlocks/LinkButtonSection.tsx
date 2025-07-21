@@ -1,22 +1,15 @@
 import React from 'react';
 import type { LinkButtonBlock } from '../../interfaces';
-import './BlockStyles.css';
 
-interface LinkButtonSectionProps {
-  block: LinkButtonBlock;
-}
-
-const LinkButtonSection: React.FC<LinkButtonSectionProps> = ({ block }) => {
+const LinkButtonSection: React.FC<{ block: LinkButtonBlock }> = ({ block }) => {
   return (
-    <div className="stop-page-block">
-      <h3>{block.title}</h3>
-      <div className="link-buttons">
-        {block.buttons.map((button, index) => (
-          <a key={index} href={button.url} target="_blank" rel="noopener noreferrer" className="link-btn">
-            {button.text}
-          </a>
-        ))}
-      </div>
+    <div className="link-button-section">
+      <h4>{block.title}</h4>
+      {block.buttons.map((button, index) => (
+        <a key={index} href={button.url} className="link-button">
+          {button.text}
+        </a>
+      ))}
     </div>
   );
 };

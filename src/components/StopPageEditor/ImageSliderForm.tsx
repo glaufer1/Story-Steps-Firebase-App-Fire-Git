@@ -1,34 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { ImageSliderBlock } from '../../interfaces';
-import './EditorStyles.css';
 
 interface ImageSliderFormProps {
   block: ImageSliderBlock;
-  onChange: (updatedBlock: ImageSliderBlock) => void;
+  onUpdate: (block: ImageSliderBlock) => void;
 }
 
-const ImageSliderForm: React.FC<ImageSliderFormProps> = ({ block, onChange }) => {
+const ImageSliderForm: React.FC<ImageSliderFormProps> = ({ block, onUpdate }) => {
+  const [images, setImages] = useState(block.images);
+
+  const handleImageChange = (index: number, value: string) => {
+    const newImages = [...images];
+    newImages[index] = value;
+    setImages(newImages);
+    onUpdate({ ...block, images: newImages });
+  };
+
+  const addImage = () => {
+    setImages([...images, '']);
+  };
+
+  const removeImage = (index: number) => {
+    const newImages = images.filter((_, i) => i !== index);
+    setImages(newImages);
+    onUpdate({ ...block, images: newImages });
+  };
+
   return (
-    <div className="block-form">
-      <h4>Image Slider Block</h4>
-      <div className="form-grid">
-        <div>
-            <label>Image 1 URL</label>
-            <input
-                type="text"
-                value={block.imageUrl1}
-                onChange={(e) => onChange({ ...block, imageUrl1: e.target.value })}
-            />
+    <div>
+      {images.map((image, index) => (
+        <div key={index}>
+          <input
+            type="text"
+            value={image}
+            onChange={(e) => handleImageChange(index, e.target.value)}
+            placeholder="Image URL"
+          />
+          <button onClick={() => removeImage(index)}>Remove</button>
         </div>
-        <div>
-            <label>Image 2 URL</label>
-            <input
-                type="text"
-                value={block.imageUrl2}
-                onChange={(e) => onChange({ ...block, imageUrl2: e.target.value })}
-            />
-        </div>
-      </div>
+      ))}
+      <button onClick={addImage}>Add Image</button>
     </div>
   );
 };

@@ -1,105 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
-import type { AppUser, Page, StopPage } from '../interfaces';
-import StopPageEditor from '../components/StopPageEditor/StopPageEditor'; // Import the editor
-import CreatePageForm from '../components/CreatePageForm'; // Import the new form
+import { collection, getDocs, addDoc, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
+import type { Page } from '../interfaces';
+import { PageType } from '../interfaces';
+import CreatePageForm from '../components/CreatePageForm';
+import { Link } from 'react-router-dom';
 
-interface PageManagementProps {
-    user: AppUser;
-}
+const PageManagement: React.FC = () => {
+  const [pages, setPages] = useState<Page[]>([]);
 
-const PageManagement: React.FC<PageManagementProps> = ({ user }) => {
-    const [pages, setPages] = useState<Page[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    
-    // State to manage which view is active
-    const [editingPage, setEditingPage] = useState<Page | null>(null);
-
+  useEffect(() => {
     const fetchPages = async () => {
-        setLoading(true);
-        const db = getFirestore();
-        try {
-            const querySnapshot = await getDocs(collection(db, "pages"));
-            const pagesData = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Page));
-            setPages(pagesData);
-        } catch (err) {
-            setError('Failed to fetch pages.');
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+      const querySnapshot = await getDocs(collection(db, 'pages'));
+      const pagesData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Page));
+      setPages(pagesData);
     };
+    fetchPages();
+  }, []);
 
-    useEffect(() => {
-        fetchPages();
-    }, []);
+  const handleCreatePage = async (title: string, type: PageType) => {
+    const newPage = { title, type };
+    const docRef = await addDoc(collection(db, 'pages'), newPage);
+    setPages([...pages, { id: docRef.id, ...newPage }]);
+  };
 
-    const handleEdit = (page: Page) => {
-        setEditingPage(page);
-    };
+  const handleDeletePage = async (id: string) => {
+    await deleteDoc(doc(db, 'pages', id));
+    setPages(pages.filter((page) => page.id !== id));
+  };
 
-    const handleSave = async (updatedPage: Page) => {
-        if (!editingPage) return;
-        setLoading(true);
-        const db = getFirestore();
-        const pageRef = doc(db, "pages", editingPage.id);
-        try {
-            await updateDoc(pageRef, { ...updatedPage });
-            setEditingPage(null); // Return to the list view
-            fetchPages(); // Refresh the data
-        } catch (err) {
-            setError('Failed to save page.');
-            console.error(err);
-            setLoading(false);
-        }
-    };
-
-    const handleDelete = async (pageId: string) => {
-        const db = getFirestore();
-        if (window.confirm("Are you sure you want to delete this page?")) {
-            try {
-                await deleteDoc(doc(db, "pages", pageId));
-                fetchPages();
-            } catch (err) {
-                setError('Failed to delete page.');
-            }
-        }
-    };
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p style={{ color: 'red' }}>{error}</p>;
-
-    // If we are editing a StopPage, render the editor
-    if (editingPage && editingPage.type === 'Stop') {
-        return (
-            <div>
-                <button onClick={() => setEditingPage(null)}>&larr; Back to Page List</button>
-                <StopPageEditor page={editingPage as StopPage} onSave={handleSave} />
-            </div>
-        );
-    }
-    
-    // TODO: Add editors for other page types here...
-
-    // Default view: list of all pages
-    return (
-        <div className="page-list-container">
-            <h2>Page Management</h2>
-            <CreatePageForm />
-            <ul className="page-list">
-                {pages.map(page => (
-                    <li key={page.id} className="page-list-item">
-                        <span>{page.title} <strong>({page.type})</strong></span>
-                        <div className="page-actions">
-                            <button className="edit-btn" onClick={() => handleEdit(page)}>Edit</button>
-                            {user.role === 'Admin' && <button className="delete-btn" onClick={() => handleDelete(page.id)}>Delete</button>}
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  return (
+    <div>
+      <h2>Page Management</h2>
+      <CreatePageForm onCreate={handleCreatePage} />
+      <ul>
+        {pages.map((page) => (
+          <li key={page.id}>
+            {page.title} ({page.type})
+            {page.type === PageType.StopPage && (
+              <Link to={`/editor/stop-page/${page.id}`}>Edit</Link>
+            )}
+            <button onClick={() => handleDeletePage(page.id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default PageManagement;

@@ -3,15 +3,16 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #fff;
-  border-bottom: 1px solid #eaeaea;
+  background-color: #429af6;
+  box-shadow: 0 4px 8px 0 #ff8a00;
+  color: #000000;
 }
 
 .navbar-brand {
   font-size: 1.5rem;
   font-weight: bold;
   text-decoration: none;
-  color: #333;
+  color: #000000;
 }
 
 .navbar-links {
@@ -22,7 +23,7 @@
 .navbar-user-email {
   margin-right: 1rem;
   font-size: 0.9rem;
-  color: #555;
+  color: #000000;
 }
 
 .navbar-button {

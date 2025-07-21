@@ -1,14 +1,9 @@
 import React from 'react';
 import type { MediaBlock } from '../../interfaces';
-import './BlockStyles.css';
 
-interface MediaSectionProps {
-  block: MediaBlock;
-}
-
-const MediaSection: React.FC<MediaSectionProps> = ({ block }) => {
+const MediaSection: React.FC<{ block: MediaBlock }> = ({ block }) => {
   return (
-    <div className="stop-page-block media-grid">
+    <div className="media-section">
       {block.items.map((item, index) => (
         <div key={index} className="media-item">
           {item.type === 'image' && <img src={item.url} alt={item.caption || ''} />}

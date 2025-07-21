@@ -1,0 +1,44 @@
+/* src/components/UserManagement.css */
+.user-management-container {
+  width: 100%;
+  color: #000000;
+}
+
+.user-tabs {
+  display: flex;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #ccc;
+}
+
+.user-tabs button {
+  background: none;
+  border: none;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #000000;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px; /* Align with the container's border */
+}
+
+.user-tabs button.active {
+  color: #000000;
+  border-bottom: 2px solid #007bff;
+}
+
+.user-tabs button:hover {
+  color: #000000;
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table th, .user-table td {
+  color: #000000;
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}

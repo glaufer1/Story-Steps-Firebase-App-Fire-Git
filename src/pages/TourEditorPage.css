@@ -1,0 +1,33 @@
+/* src/pages/TourEditorPage.css */
+
+.tour-editor-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tour-editor-container h1 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.editor-modules {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.module-placeholder {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  text-align: center;
+  font-size: 1.2rem;
+  color: #555;
+  border: 1px dashed #ccc;
+}
