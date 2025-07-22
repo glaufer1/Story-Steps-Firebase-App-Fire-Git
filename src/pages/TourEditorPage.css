@@ -9,25 +9,92 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.tour-editor-container h1 {
+.tour-editor-container h1, .tour-editor-container h2, .tour-editor-container h3 {
   color: #333;
   margin-bottom: 1rem;
 }
 
-.editor-modules {
-  margin-top: 2rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+.form-group {
+  margin-bottom: 2rem;
 }
 
-.module-placeholder {
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+.form-group label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input[type="text"] {
+  width: calc(100% - 1rem);
+  padding: 0.5rem;
+  margin-left: 1rem;
+}
+
+.audio-upload-container {
+  border: 2px dashed #ccc;
+  padding: 1rem;
   text-align: center;
-  font-size: 1.2rem;
-  color: #555;
-  border: 1px dashed #ccc;
+}
+
+.audio-preview-container {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.audio-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.audio-controls button {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #039be5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.audio-controls button:hover {
+  background-color: #0277bd;
+}
+
+.file-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.delete-button {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #c62828;
+}
+
+.success-message {
+  color: #2E7D32; /* Darker green for better visibility */
+  font-weight: bold;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #C8E6C9; /* Light green background */
+  border: 1px solid #A5D6A7;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.quill-editor-container {
+  margin-bottom: 4rem; /* Add more space for the toolbar */
 }

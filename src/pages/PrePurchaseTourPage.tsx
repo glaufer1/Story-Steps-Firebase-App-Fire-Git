@@ -2,7 +2,7 @@ import React from 'react';
 import type { PrePurchaseTourPage as PrePurchaseTourPageInterface, Stop } from '../interfaces';
 
 interface PrePurchaseTourPageProps {
-  page: PrePurchaseTourPageInterface;
+  page: PrePurchaseTourPageInterface & { tourPreviewAudio?: string };
 }
 
 const PrePurchaseTourPage: React.FC<PrePurchaseTourPageProps> = ({ page }) => {
@@ -12,7 +12,14 @@ const PrePurchaseTourPage: React.FC<PrePurchaseTourPageProps> = ({ page }) => {
       {page.imageUrl && <img src={page.imageUrl} alt={page.title} />}
       <p>Distance: {page.distance}</p>
       <p>Travel Mode: {page.travelMode}</p>
-      {page.previewAudioUrl && <audio src={page.previewAudioUrl} controls />}
+      {page.tourPreviewAudio && (
+        <div className="audio-preview">
+          <p>Tour Preview:</p>
+          <audio controls src={page.tourPreviewAudio}>
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      )}
       {page.description && <p>{page.description}</p>}
       <h2>Stops</h2>
       <ul>

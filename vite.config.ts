@@ -22,10 +22,6 @@ export default defineConfig({
   ],
   server: {
     host: '0.0.0.0', // Listen on all network interfaces
-    port: 8080,      // Use a common port
-    strictPort: true, // Ensure this port is used
-    hmr: {
-      clientPort: 443 // Use the standard HTTPS port for HMR
-    }
+    port: 3000,      // Use a common port
   }
 })

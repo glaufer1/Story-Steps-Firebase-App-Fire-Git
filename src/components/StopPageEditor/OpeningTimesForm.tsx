@@ -17,7 +17,9 @@ const OpeningTimesForm: React.FC<OpeningTimesFormProps> = ({ block, onUpdate }) 
   };
 
   const addTime = () => {
-    setTimes([...times, { day: '', open: '', close: '' }]);
+    const newTimes = [...times, { day: '', open: '', close: '' }];
+    setTimes(newTimes);
+    onUpdate({ ...block, times: newTimes });
   };
 
   const removeTime = (index: number) => {

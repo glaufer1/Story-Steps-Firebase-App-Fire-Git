@@ -2,13 +2,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './AdminNavbar.css';
-import logo from '../assets/logo.png'; // Assuming the logo is here
 
 const AdminNavbar: React.FC = () => {
   return (
     <nav className="admin-navbar">
       <div className="admin-navbar-brand">
-        <img src={logo} alt="Story Steps Logo" />
+        Story Steps
       </div>
       <ul className="admin-navbar-links">
         <li><NavLink to="/admin/tour-creator" className={({ isActive }) => isActive ? 'active' : ''}>Create Tour</NavLink></li>

@@ -8,10 +8,19 @@ export interface AppUser {
 export interface Tour {
   id: string;
   title: string;
+  subTitle?: string;
   description: string;
+  additionalTourText?: string;
   city: string;
   price?: number;
   stops?: Stop[];
+  tourPreviewAudio?: string;
+  tourPreviewAudioFileName?: string;
+}
+
+export interface City {
+  id: string;
+  name: string;
 }
 
 export interface Stop {

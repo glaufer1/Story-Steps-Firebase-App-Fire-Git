@@ -27,8 +27,8 @@ const TourCreatorPage: React.FC = () => {
         city,
         createdAt: new Date(),
       });
-      // Redirect to the new tour editor page with the new tour's ID
-      navigate(`/admin/tour-editor/${docRef.id}`);
+      // Redirect to the new tour information editor page
+      navigate(`/admin/tour-editor/${docRef.id}/info`);
     } catch (err) {
       setError('Failed to create tour. Please try again.');
       console.error(err);

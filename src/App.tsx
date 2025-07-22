@@ -17,6 +17,8 @@ import TourEditorPage from './pages/TourEditorPage';
 import EditTourListPage from './pages/EditTourListPage';
 import UserManagementPage from './pages/UserManagementPage';
 import CityManagementPage from './pages/CityManagementPage';
+import TourInformationEditor from './pages/TourInformationEditor';
+
 
 import { auth, db } from './firebaseConfig';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -37,7 +39,9 @@ function App() {
         const userDocRef = doc(db, 'users', currentUser.uid);
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
-          setUser({ uid: currentUser.uid, ...userDocSnap.data() } as AppUser);
+          const userData = userDocSnap.data() as AppUser;
+          console.log('User role:', userData.role);
+          setUser(userData);
         } else {
           const newUser: AppUser = { uid: currentUser.uid, email: currentUser.email, role: 'Customer' };
           await setDoc(userDocRef, newUser);
@@ -49,7 +53,7 @@ function App() {
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [auth, db]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -78,6 +82,7 @@ function App() {
               <Route path="tour-creator" element={<TourCreatorPage />} />
               <Route path="edit-tour" element={<EditTourListPage />} />
               <Route path="tour-editor/:tourId" element={<TourEditorPage />} />
+              <Route path="tour-editor/:tourId/info" element={<TourInformationEditor />} />
               <Route path="user-management" element={<UserManagementPage />} />
               <Route path="city-management" element={<CityManagementPage />} />
             </Route>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import type { Tour } from '../interfaces';
@@ -8,7 +8,7 @@ import './TourEditorPage.css';
 const TourEditorPage: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const [tour, setTour] = useState<Tour | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading,setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const TourEditorPage: React.FC = () => {
     };
 
     fetchTour();
-  }, [tourId]);
+  }, [tourId, db]);
 
   if (loading) return <p>Loading tour details...</p>;
   if (error) return <p style={{ color: 'red' }}>{error}</p>;
@@ -45,11 +45,13 @@ const TourEditorPage: React.FC = () => {
       <p>Tour ID: {tour.id}</p>
       
       <div className="editor-modules">
-        <div className="module-placeholder">Photos Module</div>
+        <Link to={`/admin/tour-editor/${tourId}/info`} className="module-placeholder">
+          Edit Tour Information
+        </Link>
         <div className="module-placeholder">Audio Files Module</div>
         <div className="module-placeholder">Geofence Module</div>
         <div className="module-placeholder">Maps Module</div>
-        <div className="module-placeholder">Descriptions Module</div>
+        <div className="module-placeholder">Photos Module</div>
         <div className="module-placeholder">Links Module</div>
       </div>
     </div>

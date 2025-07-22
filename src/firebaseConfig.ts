@@ -21,4 +21,4 @@ const db = getFirestore(app);
 // Initialize Analytics only in supported environments
 isSupported().then(yes => yes && getAnalytics(app));
 
-export { auth, db, app };
+export { auth, db };

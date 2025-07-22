@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { collection, getDocs, doc, deleteDoc, addDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import type { AppUser } from '../interfaces';
 import { db } from '../firebaseConfig';
 import './UserManagement.css';
@@ -10,6 +11,7 @@ const UserManagement = () => {
     const [error, setError] = useState('');
     const [activeTab, setActiveTab] = useState<'Admin' | 'Creator' | 'Customer'>('Admin');
     const [newUserEmail, setNewUserEmail] = useState('');
+    const [newUserPassword, setNewUserPassword] = useState('');
     const [newUserRole, setNewUserRole] = useState<'Admin' | 'Creator' | 'Customer'>('Customer');
 
     useEffect(() => {
@@ -41,18 +43,23 @@ const UserManagement = () => {
 
     const handleAddUser = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newUserEmail) {
-            setError('Please enter an email.');
+        if (!newUserEmail || !newUserPassword) {
+            setError('Please enter an email and password.');
             return;
         }
+        setError('');
         try {
-            const newUser = { email: newUserEmail, role: newUserRole };
-            const docRef = await addDoc(collection(db, "users"), newUser);
-            setUsers([...users, { ...newUser, uid: docRef.id }]);
+            const functions = getFunctions();
+            const createUser = httpsCallable(functions, 'createUser');
+            await createUser({ email: newUserEmail, password: newUserPassword, role: newUserRole });
+            // Refresh user list after adding a new user
+            const querySnapshot = await getDocs(collection(db, "users"));
+            const usersData = querySnapshot.docs.map(doc => ({ ...doc.data(), uid: doc.id } as AppUser));
+            setUsers(usersData);
             setNewUserEmail('');
-            setError('');
+            setNewUserPassword('');
         } catch (err) {
-            setError('Failed to add user.');
+            setError('Failed to add user. ' + (err as Error).message);
             console.error(err);
         }
     };
@@ -60,7 +67,6 @@ const UserManagement = () => {
     const filteredUsers = users.filter(user => user.role === activeTab);
 
     if (loading) return <p>Loading users...</p>;
-
 
     return (
         <div className="user-management-container">
@@ -72,6 +78,12 @@ const UserManagement = () => {
                         value={newUserEmail}
                         onChange={(e) => setNewUserEmail(e.target.value)}
                         placeholder="User Email"
+                    />
+                    <input
+                        type="password"
+                        value={newUserPassword}
+                        onChange={(e) => setNewUserPassword(e.target.value)}
+                        placeholder="Temporary Password"
                     />
                     <select value={newUserRole} onChange={(e) => setNewUserRole(e.target.value as 'Admin' | 'Creator' | 'Customer')}>
                         <option value="Customer">Customer</option>
