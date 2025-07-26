@@ -1,13 +1,21 @@
 // src/pages/UserManagementPage.tsx
 import React from 'react';
 import UserManagement from '../components/UserManagement';
+import GlobalHeader from '../components/GlobalHeader';
+import { AppUser } from '../interfaces';
 import './PageStyles.css';
 
-const UserManagementPage: React.FC = () => {
+interface UserManagementPageProps {
+  user: AppUser;
+}
+
+const UserManagementPage: React.FC<UserManagementPageProps> = ({ user }) => {
   return (
-    <div className="page-container">
-      <h2>User Management</h2>
-      <UserManagement />
+    <div className="back-office-page">
+      <GlobalHeader user={user} />
+      <div className="back-office-content">
+        <UserManagement currentUser={user} />
+      </div>
     </div>
   );
 };

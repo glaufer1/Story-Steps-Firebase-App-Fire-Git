@@ -1,29 +1,63 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Rules for the 'users' collection
-    match /users/{userId} {
-      // Admins can list all users. This is required for the user management page.
-      allow list: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin';
-
-      // Allow users to create their own user document upon registration or Admins to create users
-      allow create: if request.auth != null && (request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin');
-      
-      // Allow users to read/update their own data. Admins can read/update any user's data.
-      allow read, update: if request.auth != null && (request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin');
-
-      // Allow Admins to delete users.
-      allow delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin';
+    function isAdmin() {
+      return request.auth != null && 
+        request.auth.token.role == 'Admin';
     }
 
-    // Rules for the 'tours' collection
+    function isCreator() {
+      return request.auth != null && 
+        request.auth.token.role == 'Creator';
+    }
+
+    function isAdminOrCreator() {
+      return request.auth != null && 
+        (request.auth.token.role == 'Admin' || request.auth.token.role == 'Creator');
+    }
+
+    // Allow read to authenticated users
     match /tours/{tourId} {
-      // Allow any authenticated user to read tours
       allow read: if request.auth != null;
-      // Allow users with 'Admin' or 'Creator' role to write to tours
-      allow write: if request.auth != null && (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin' || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Creator');
+      allow create: if isAdminOrCreator();
+      allow update, delete: if isAdminOrCreator() && 
+        (isAdmin() || resource.data.createdBy == request.auth.uid);
+    }
+
+    match /users/{userId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == userId || isAdmin());
+      allow create: if request.auth != null && 
+        (request.auth.uid == userId || isAdmin());
+      allow update, delete: if request.auth != null && isAdmin();
+    }
+
+    match /cities/{cityId} {
+      allow read: if request.auth != null;
+      allow write: if isAdminOrCreator();
+    }
+
+    // Customer Pages - Allow admins and creators to manage
+    match /customerPages/{pageId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdminOrCreator();
+    }
+
+    // Menus - Allow admins and creators to manage
+    match /menus/{menuId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdminOrCreator();
+    }
+
+    // Site Configuration - Allow admins and creators to manage
+    match /siteConfig/{configId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdminOrCreator();
+    }
+
+    // Default: deny all
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

@@ -5,6 +5,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import type { Tour } from '../interfaces';
 import './PageStyles.css';
+import ErrorMessage from '../components/ErrorMessage';
 
 const EditTourListPage: React.FC = () => {
   const [tours, setTours] = useState<Tour[]>([]);
@@ -29,7 +30,7 @@ const EditTourListPage: React.FC = () => {
   }, []);
 
   if (loading) return <p>Loading tours...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <div className="page-list-container">

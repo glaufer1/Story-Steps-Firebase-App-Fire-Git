@@ -1,0 +1,133 @@
+.tour-selector-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-top: 64px; /* Height of the GlobalHeader */
+}
+
+.tour-selector-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.selector-header h1 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.back-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #95a5a6;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #7f8c8d;
+}
+
+.selector-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.city-selector {
+  margin-bottom: 2rem;
+}
+
+.city-selector label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.city-selector select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #2c3e50;
+  background-color: white;
+}
+
+.tours-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.tour-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tour-item:hover {
+  border-color: #3498db;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tour-item h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.edit-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.edit-button:hover {
+  background-color: #2980b9;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .tour-selector-content {
+    padding: 1rem;
+  }
+
+  .selector-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .selector-container {
+    padding: 1rem;
+  }
+
+  .tour-item {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+} 

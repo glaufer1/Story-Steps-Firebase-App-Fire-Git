@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+.edit-tour-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-top: 64px; /* Height of the GlobalHeader */
+}
+
+.edit-tour-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.edit-tour-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.edit-tour-header h1 {
+  margin: 0;
+  color: #2c3e50;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.save-button,
+.back-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+.save-button {
+  background-color: #2ecc71;
+}
+
+.save-button:hover {
+  background-color: #27ae60;
+}
+
+.save-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.back-button {
+  background-color: #95a5a6;
+}
+
+.back-button:hover {
+  background-color: #7f8c8d;
+}
+
+.error-message,
+.success-message {
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.error-message {
+  background-color: #fff3f3;
+  border: 1px solid #ffcdd2;
+  color: #d32f2f;
+}
+
+.success-message {
+  background-color: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  color: #2e7d32;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  font-family: 'Poppins', sans-serif;
+  color: #666;
+}
+
+.edit-tour-tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 1rem;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  position: relative;
+}
+
+.tab-button:hover {
+  background-color: #f8f9fa;
+  color: #2c3e50;
+}
+
+.tab-button.active {
+  color: #3498db;
+  background-color: #ebf5fb;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #3498db;
+}
+
+.tab-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.basic-info-form,
+.tour-stops-section,
+.additional-details-section,
+.map-settings-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #000000;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #95a5a6;
+  font-family: 'Poppins', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .edit-tour-content {
+    padding: 1rem;
+  }
+
+  .edit-tour-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .edit-tour-tabs {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tab-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .tab-button.active::after {
+    display: none;
+  }
+
+  .tab-content {
+    padding: 1rem;
+  }
+} 

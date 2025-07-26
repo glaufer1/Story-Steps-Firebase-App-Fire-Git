@@ -3,6 +3,18 @@ export interface AppUser {
   uid: string;
   email: string | null;
   role: 'Admin' | 'Creator' | 'Customer';
+  displayName?: string;
+  photoURL?: string;
+  firstName?: string;
+  lastName?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  mobilePhone?: string;
+  citiesOfInterest?: string[];
+  updatedAt?: Date;
+  createdAt?: Date;
 }
 
 export interface Tour {
@@ -12,6 +24,8 @@ export interface Tour {
   description: string;
   additionalTourText?: string;
   city: string;
+  distance?: string;
+  time?: string;
   price?: number;
   stops?: Stop[];
   tourPreviewAudio?: string;
@@ -21,6 +35,15 @@ export interface Tour {
 export interface City {
   id: string;
   name: string;
+  state?: string;
+  photoUrl?: string;
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  widePhotoUrl?: string;
+  squarePhotoUrl?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Stop {
@@ -32,6 +55,126 @@ export interface Stop {
   };
   heroImageUrl?: string;
   title?: string;
+}
+
+// Customer Facing Pages Interfaces
+export enum CustomerPageType {
+  Home = 'Home',
+  About = 'About',
+  Blog = 'Blog',
+  City = 'City',
+  TourPromo = 'TourPromo',
+  ToursList = 'ToursList',
+  Stop = 'Stop',
+  Custom = 'Custom'
+}
+
+export interface CustomerPage {
+  id: string;
+  title: string;
+  slug: string;
+  type: CustomerPageType;
+  description?: string;
+  isPublished: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  sections: PageSection[];
+  metaTitle?: string;
+  metaDescription?: string;
+  featuredImage?: string;
+}
+
+export interface PageSection {
+  id: string;
+  type: SectionType;
+  title?: string;
+  content: any;
+  order: number;
+  isVisible: boolean;
+}
+
+export enum SectionType {
+  Header = 'Header',
+  Text = 'Text',
+  Gallery = 'Gallery',
+  AudioPlayer = 'AudioPlayer',
+  Map = 'Map',
+  TourContent = 'TourContent',
+  StopContent = 'StopContent',
+  ContactForm = 'ContactForm',
+  SocialMedia = 'SocialMedia',
+  Custom = 'Custom'
+}
+
+// Menu Management Interfaces
+export interface Menu {
+  id: string;
+  name: string;
+  location: MenuLocation;
+  items: MenuItem[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  logoUrl?: string;
+}
+
+export enum MenuLocation {
+  Header = 'Header',
+  Footer = 'Footer',
+  Sidebar = 'Sidebar'
+}
+
+export interface MenuItem {
+  id: string;
+  title: string;
+  url?: string;
+  pageId?: string;
+  order: number;
+  parentId?: string;
+  children?: MenuItem[];
+  isExternal: boolean;
+  isVisible: boolean;
+}
+
+// Header/Footer Management Interfaces
+export interface SiteHeader {
+  id: string;
+  logoUrl?: string;
+  logoAlt?: string;
+  menuId?: string;
+  isLocked: boolean;
+  mobileBreakpoint: number;
+  styles: HeaderStyles;
+}
+
+export interface HeaderStyles {
+  backgroundColor?: string;
+  textColor?: string;
+  logoWidth?: string;
+  logoHeight?: string;
+  padding?: string;
+}
+
+export interface SiteFooter {
+  id: string;
+  menuId?: string;
+  copyrightText?: string;
+  socialLinks?: SocialLink[];
+  isLocked: boolean;
+  styles: FooterStyles;
+}
+
+export interface FooterStyles {
+  backgroundColor?: string;
+  textColor?: string;
+  padding?: string;
+}
+
+export interface SocialLink {
+  platform: string;
+  url: string;
+  icon?: string;
 }
 
 export enum PageType {
@@ -126,7 +269,7 @@ export interface LocationBlock extends ContentBlock {
   latitude: number;
   longitude: number;
   address: string;
-  mapType?: string;
+  mapType: string; // Changed from optional to required
 }
 
 export interface Pin {
@@ -136,6 +279,7 @@ export interface Pin {
   longitude: number;
   color?: string;
 }
+
 export interface HowToGetFromBlock extends ContentBlock {
   type: BlockType.HowToGetFrom;
   pins: Pin[];
@@ -144,7 +288,7 @@ export interface HowToGetFromBlock extends ContentBlock {
 
 export interface LinkButtonBlock extends ContentBlock {
   type: BlockType.LinkButton;
-  title?: string;
+  title: string; // Changed from optional to required
   buttons: { text: string; url: string }[];
 }
 

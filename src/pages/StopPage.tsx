@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 import type { StopPage as StopPageInterface, ContentBlock, TextBlock, MediaBlock, LinkButtonBlock, LocationBlock, HowToGetFromBlock } from '../interfaces';
 import { BlockType } from '../interfaces';
 import TextSection from '../components/StopPageBlocks/TextSection';
@@ -7,11 +10,30 @@ import LinkButtonSection from '../components/StopPageBlocks/LinkButtonSection';
 import LocationSection from '../components/StopPageBlocks/LocationSection';
 import HowToGetFromSection from '../components/StopPageBlocks/HowToGetFromSection';
 
-interface StopPageProps {
-  page: StopPageInterface;
-}
+const StopPage: React.FC = () => {
+  const { pageId } = useParams<{ pageId: string }>();
+  const [page, setPage] = useState<StopPageInterface | null>(null);
+  const [loading, setLoading] = useState(true);
 
-const StopPage: React.FC<StopPageProps> = ({ page }) => {
+  useEffect(() => {
+    const fetchPage = async () => {
+      if (!pageId) return;
+
+      try {
+        const pageDoc = await getDoc(doc(db, 'pages', pageId));
+        if (pageDoc.exists()) {
+          setPage(pageDoc.data() as StopPageInterface);
+        }
+      } catch (err) {
+        console.error('Error fetching page:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPage();
+  }, [pageId]);
+
   const renderBlock = (block: ContentBlock) => {
     switch (block.type) {
       case BlockType.Text:
@@ -28,6 +50,9 @@ const StopPage: React.FC<StopPageProps> = ({ page }) => {
         return null;
     }
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (!page) return <div>Page not found</div>;
 
   return (
     <div>

@@ -1,3 +1,13 @@
+# Story Steps Firebase App
+
+## Environment Setup
+
+1. Copy `.env.example` to `.env.local` in the root directory.
+2. Fill in your Firebase and Google Maps API keys in `.env.local`.
+3. Never commit `.env.local` to version control.
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

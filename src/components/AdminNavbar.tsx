@@ -1,23 +1,60 @@
 // src/components/AdminNavbar.tsx
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { AppUser } from '../interfaces';
 import './AdminNavbar.css';
 
-const AdminNavbar: React.FC = () => {
+interface AdminNavbarProps {
+  user: AppUser;
+}
+
+const AdminNavbar: React.FC<AdminNavbarProps> = ({ user }) => {
   return (
     <nav className="admin-navbar">
       <div className="admin-navbar-brand">
-        Story Steps
+        Story Steps Admin
       </div>
-      <ul className="admin-navbar-links">
-        <li><NavLink to="/admin/tour-creator" className={({ isActive }) => isActive ? 'active' : ''}>Create Tour</NavLink></li>
-        <li><NavLink to="/admin/edit-tour" className={({ isActive }) => isActive ? 'active' : ''}>Edit Tour</NavLink></li>
-        <li><NavLink to="/cities" className={({ isActive }) => isActive ? 'active' : ''}>Cities</NavLink></li>
-        <li><NavLink to="/tours" className={({ isActive }) => isActive ? 'active' : ''}>Pre-Purchase</NavLink></li>
-        <li><NavLink to="/tours" className={({ isActive }) => isActive ? 'active' : ''}>Post-Purchase</NavLink></li>
-        <li><NavLink to="/collections" className={({ isActive }) => isActive ? 'active' : ''}>Stop Collections</NavLink></li>
-        <li><NavLink to="/stops" className={({ isActive }) => isActive ? 'active' : ''}>Stop Details</NavLink></li>
-        <li><NavLink to="/admin/user-management" className={({ isActive }) => isActive ? 'active' : ''}>Users</NavLink></li>
+      <ul className="admin-nav-links">
+        {/* All authenticated users can see these */}
+        <li>
+          <Link to="/home">Home</Link>
+        </li>
+        
+        {/* Admin and Creator links */}
+        {(user.role === 'Admin' || user.role === 'Creator') && (
+          <>
+            <li>
+              <Link to="/admin/tour-creator">Tour Creator</Link>
+            </li>
+            <li>
+              <Link to="/admin/edit-tour">Edit Tours</Link>
+            </li>
+          </>
+        )}
+
+        {/* Admin-only links */}
+        {user.role === 'Admin' && (
+          <>
+            <li>
+              <Link to="/admin/user-management">User Management</Link>
+            </li>
+            <li>
+              <Link to="/admin/city-management">City Management</Link>
+            </li>
+          </>
+        )}
+
+        {/* Customer-specific links */}
+        {user.role === 'Customer' && (
+          <>
+            <li>
+              <Link to="/my-tours">My Tours</Link>
+            </li>
+            <li>
+              <Link to="/my-profile">My Profile</Link>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );

@@ -1,0 +1,89 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow authenticated users to read and write their own profile photos
+    match /images/profiles/{userId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Allow authenticated users to read tour and stop images
+    match /images/tours/{tourId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+
+    // Allow authenticated users to read tour and stop audios
+    match /audios/tours/{tourId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+
+    // Allow access to nested stop files
+    match /images/tours/{tourId}/stops/{stopId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+
+    match /audios/tours/{tourId}/stops/{stopId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+
+    // Allow authenticated users to read and write menu logos
+    match /images/menus/{menuId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+
+    // Allow authenticated users to read and write page assets
+    match /images/pages/{pageId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+
+    match /audios/pages/{pageId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+
+    // Allow authenticated users to read and write header assets
+    match /images/headers/{headerId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+
+    // Allow authenticated users to read and write city photos
+    match /images/cities/{cityId}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && (
+        request.auth.token.role == 'Admin' || 
+        request.auth.token.role == 'Creator'
+      );
+    }
+  }
+} 

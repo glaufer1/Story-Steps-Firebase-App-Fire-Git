@@ -3,6 +3,7 @@ import { collection, getDocs, doc, deleteDoc, FirestoreError } from 'firebase/fi
 import './TourList.css';
 import type { Tour, AppUser } from './interfaces';
 import { db } from './firebaseConfig';
+import ErrorMessage from './components/ErrorMessage';
 
 interface TourListProps {
   onEdit: (tour: Tour) => void;
@@ -61,7 +62,7 @@ const TourList: React.FC<TourListProps> = ({ onEdit, user }) => {
     <div className="tour-list-container">
       <h2>Existing Tours</h2>
       {/* Display a prominent error message if something fails */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <ErrorMessage message={error} />}
       
       {tours.length === 0 ? (
         <p>No tours found. {isPrivilegedUser && "Create one above!"}</p>

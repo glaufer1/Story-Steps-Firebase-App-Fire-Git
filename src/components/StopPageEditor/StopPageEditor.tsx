@@ -1,20 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebaseConfig';
-import type {
-  StopPage,
-  ContentBlock,
-  TextBlock,
-  MediaBlock,
-  LocationBlock,
-  HowToGetFromBlock,
-  LinkButtonBlock,
-  SocialMediaBlock,
-  OpeningTimesBlock,
-  ImageSliderBlock,
-} from '../../interfaces';
-import { BlockType } from '../../interfaces';
+import React from 'react';
+import { ContentBlock, BlockType, LocationBlock, LinkButtonBlock, TextBlock, MediaBlock, HowToGetFromBlock, SocialMediaBlock, OpeningTimesBlock, ImageSliderBlock } from '../../interfaces';
 import TextForm from './TextForm';
 import MediaForm from './MediaForm';
 import LocationForm from './LocationForm';
@@ -24,139 +9,99 @@ import SocialMediaForm from './SocialMediaForm';
 import OpeningTimesForm from './OpeningTimesForm';
 import ImageSliderForm from './ImageSliderForm';
 
-const StopPageEditor: React.FC = () => {
-  const { pageId } = useParams<{ pageId: string }>();
-  const [page, setPage] = useState<StopPage | null>(null);
-  const [loading, setLoading] = useState(true);
+interface StopPageEditorProps {
+  blocks: ContentBlock[];
+  onUpdateBlock: (block: ContentBlock) => void;
+  onDeleteBlock: (blockId: string) => void;
+}
 
-  useEffect(() => {
-    if (pageId) {
-      const fetchPage = async () => {
-        const pageDoc = await getDoc(doc(db, 'pages', pageId));
-        if (pageDoc.exists()) {
-          setPage(pageDoc.data() as StopPage);
-        }
-        setLoading(false);
-      };
-      fetchPage();
-    }
-  }, [pageId]);
-
+const StopPageEditor: React.FC<StopPageEditorProps> = ({
+  blocks,
+  onUpdateBlock,
+  onDeleteBlock,
+}) => {
   const handleUpdateBlock = (updatedBlock: ContentBlock) => {
-    if (page) {
-      const updatedContentBlocks =
-        page.contentBlocks?.map((block) =>
-          block.id === updatedBlock.id ? updatedBlock : block
-        ) || [];
-      const updatedPage = { ...page, contentBlocks: updatedContentBlocks };
-      setPage(updatedPage);
-      if (pageId) {
-        updateDoc(doc(db, 'pages', pageId), updatedPage);
-      }
-    }
+    onUpdateBlock(updatedBlock);
   };
 
-  const addBlock = (type: BlockType) => {
-    if (page) {
-      const newBlock: ContentBlock = {
-        id: `block-${Date.now()}`,
-        type,
-        order: page.contentBlocks?.length || 0,
-      } as ContentBlock;
-
-      const updatedPage = {
-        ...page,
-        contentBlocks: [...(page.contentBlocks || []), newBlock],
-      };
-      setPage(updatedPage);
-      if (pageId) {
-        updateDoc(doc(db, 'pages', pageId), updatedPage);
-      }
+  const renderBlockEditor = (block: ContentBlock) => {
+    switch (block.type) {
+      case BlockType.Text:
+        return (
+          <TextForm
+            block={block as TextBlock}
+            onUpdate={handleUpdateBlock}
+            onDelete={() => onDeleteBlock(block.id)}
+          />
+        );
+      case BlockType.Media:
+        return (
+          <MediaForm
+            block={block as MediaBlock}
+            onUpdate={handleUpdateBlock}
+            onDelete={() => onDeleteBlock(block.id)}
+          />
+        );
+      case BlockType.Location:
+        return (
+          <LocationForm
+            block={block as LocationBlock}
+            onUpdate={handleUpdateBlock}
+            onDelete={() => onDeleteBlock(block.id)}
+          />
+        );
+      case BlockType.HowToGetFrom:
+        return (
+          <HowToGetFromForm
+            block={block as HowToGetFromBlock}
+            onUpdate={handleUpdateBlock}
+            onDelete={() => onDeleteBlock(block.id)}
+          />
+        );
+      case BlockType.LinkButton:
+        return (
+          <LinkButtonForm
+            block={block as LinkButtonBlock}
+            onUpdate={handleUpdateBlock}
+            onDelete={() => onDeleteBlock(block.id)}
+          />
+        );
+      case BlockType.SocialMedia:
+        return (
+          <SocialMediaForm
+            block={block as SocialMediaBlock}
+            onUpdate={handleUpdateBlock}
+            onDelete={() => onDeleteBlock(block.id)}
+          />
+        );
+      case BlockType.OpeningTimes:
+        return (
+          <OpeningTimesForm
+            block={block as OpeningTimesBlock}
+            onUpdate={handleUpdateBlock}
+            onDelete={() => onDeleteBlock(block.id)}
+          />
+        );
+      case BlockType.ImageSlider:
+        return (
+          <ImageSliderForm
+            block={block as ImageSliderBlock}
+            onUpdate={handleUpdateBlock}
+            onDelete={() => onDeleteBlock(block.id)}
+          />
+        );
+      default:
+        return null;
     }
   };
-
-
-  if (loading) return <p>Loading...</p>;
-  if (!page) return <p>Page not found</p>;
 
   return (
-    <div>
-      <h2>Editing Stop Page: {page.title}</h2>
-      <div>
-        <button onClick={() => addBlock(BlockType.Text)}>Add Text Block</button>
-        <button onClick={() => addBlock(BlockType.Media)}>Add Media Block</button>
-        {/* Add buttons for other block types */}
-      </div>
-      {page.contentBlocks?.map((block) => {
-        switch (block.type) {
-          case BlockType.Text:
-            return (
-              <TextForm
-                key={block.id}
-                block={block as TextBlock}
-                onUpdate={handleUpdateBlock}
-              />
-            );
-          case BlockType.Media:
-            return (
-              <MediaForm
-                key={block.id}
-                block={block as MediaBlock}
-                onUpdate={handleUpdateBlock}
-              />
-            );
-          case BlockType.Location:
-            return (
-              <LocationForm
-                key={block.id}
-                block={block as LocationBlock}
-                onUpdate={handleUpdateBlock}
-              />
-            );
-          case BlockType.HowToGetFrom:
-            return (
-              <HowToGetFromForm
-                key={block.id}
-                block={block as HowToGetFromBlock}
-                onUpdate={handleUpdateBlock}
-              />
-            );
-          case BlockType.LinkButton:
-            return (
-              <LinkButtonForm
-                key={block.id}
-                block={block as LinkButtonBlock}
-                onUpdate={handleUpdateBlock}
-              />
-            );
-          case BlockType.SocialMedia:
-            return (
-              <SocialMediaForm
-                key={block.id}
-                block={block as SocialMediaBlock}
-                onUpdate={handleUpdateBlock}
-              />
-            );
-          case BlockType.OpeningTimes:
-            return (
-              <OpeningTimesForm
-                key={block.id}
-                block={block as OpeningTimesBlock}
-                onUpdate={handleUpdateBlock}
-              />
-            );
-          case BlockType.ImageSlider:
-            return (
-              <ImageSliderForm
-                key={block.id}
-                block={block as ImageSliderBlock}
-                onUpdate={handleUpdateBlock}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
+    <div className="stop-page-editor">
+      {blocks.map((block) => (
+        <div key={block.id} className="block-editor">
+          {renderBlockEditor(block)}
+        </div>
+      ))}
     </div>
   );
 };

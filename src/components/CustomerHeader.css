@@ -1,0 +1,258 @@
+.customer-header {
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-desktop {
+  display: flex;
+  gap: 1.4rem;
+  align-items: center;
+}
+
+.nav-desktop .nav-item {
+  color: #333;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.5rem 0.7rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+  white-space: nowrap;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-desktop .nav-item:hover {
+  background-color: #f5f5f5;
+  color: #000;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  color: #333;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.user-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.user-menu-trigger:hover {
+  background-color: #f5f5f5;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 500;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  min-width: 200px;
+  z-index: 1001;
+  margin-top: 0.5rem;
+}
+
+.menu-item {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.menu-item:hover {
+  background-color: #f5f5f5;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.sign-out-button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  color: #dc3545;
+}
+
+.sign-out-button:hover {
+  background-color: #fff5f5;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .nav-desktop {
+    display: none;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
+  }
+  
+  .user-name {
+    display: none;
+  }
+  
+  .mobile-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 1001;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .mobile-nav-item {
+    display: block;
+    padding: 1rem;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+  }
+  
+  .mobile-nav-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .mobile-user-section {
+    padding: 1rem;
+    border-top: 2px solid #e0e0e0;
+    background-color: #f9f9f9;
+  }
+  
+  .mobile-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e0e0e0;
+  }
+  
+  .mobile-user-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .mobile-user-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .mobile-menu-item {
+    display: block;
+    padding: 0.75rem;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    font-size: 0.9rem;
+  }
+  
+  .mobile-menu-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .mobile-menu-item.sign-out-button {
+    color: #dc3545;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+  }
+  
+  .mobile-menu-item.sign-out-button:hover {
+    background-color: #fff5f5;
+  }
+} 

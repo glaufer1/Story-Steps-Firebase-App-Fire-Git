@@ -2,14 +2,19 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import AdminNavbar from './AdminNavbar';
+import { AppUser } from '../interfaces';
 
-const AdminLayout: React.FC = () => {
+interface AdminLayoutProps {
+  user: AppUser;
+}
+
+const AdminLayout: React.FC<AdminLayoutProps> = ({ user }) => {
   return (
     <div className="admin-layout">
-      <AdminNavbar />
-      <main className="admin-layout-content">
+      <AdminNavbar user={user} />
+      <div className="admin-content">
         <Outlet />
-      </main>
+      </div>
     </div>
   );
 };

@@ -1,259 +1,127 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db } from '../firebaseConfig';
-import type { Tour } from '../interfaces';
-import Editor from 'react-simple-wysiwyg';
-import './TourEditorPage.css';
+import { Tour } from '../interfaces';
+import * as yup from 'yup';
+
+const schema = yup.object().shape({
+  title: yup.string().required('Title is required'),
+  description: yup.string().required('Description is required'),
+  city: yup.string().required('City is required'),
+  price: yup.number().min(0, 'Price must be positive').optional(),
+});
 
 const TourInformationEditor: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
   const [tour, setTour] = useState<Tour | null>(null);
-  const [title, setTitle] = useState('');
-  const [subTitle, setSubTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [additionalTourText, setAdditionalTourText] = useState('');
-  const [tourPreviewAudio, setTourPreviewAudio] = useState<string | null>(null);
-  const [localAudioUrl, setLocalAudioUrl] = useState<string | null>(null);
-  const [fileName, setFileName] = useState('');
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [saving, setSaving] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  const audioRef = useRef<HTMLAudioElement>(null);
+  useEffect(() => {
+    const fetchTour = async () => {
+      if (!tourId) return;
 
-  const fetchTour = useCallback(async () => {
-    if (!tourId) return;
-    setLoading(true);
-    try {
-      const tourDocRef = doc(db, 'tours', tourId);
-      const tourDocSnap = await getDoc(tourDocRef);
-      if (tourDocSnap.exists()) {
-        const tourData = tourDocSnap.data() as Tour;
-        setTour(tourData);
-        setTitle(tourData.title || '');
-        setSubTitle(tourData.subTitle || '');
-        setDescription(tourData.description || '');
-        setAdditionalTourText(tourData.additionalTourText || '');
-        setTourPreviewAudio(tourData.tourPreviewAudio || null);
-        setLocalAudioUrl(tourData.tourPreviewAudio || null);
-        setFileName(tourData.tourPreviewAudioFileName || '');
-      } else {
-        setError('Tour not found.');
+      try {
+        const tourDoc = await getDoc(doc(db, 'tours', tourId));
+        if (tourDoc.exists()) {
+          setTour(tourDoc.data() as Tour);
+        }
+      } catch (err) {
+        console.error('Error fetching tour:', err);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setError('Failed to fetch tour data.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    fetchTour();
   }, [tourId]);
 
-  useEffect(() => {
-    fetchTour();
-  }, [fetchTour]);
-
-  const handleAudioUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !tourId) return;
-
-    console.log('Starting audio upload...');
-    setLocalAudioUrl(URL.createObjectURL(file));
-    setUploading(true);
-    setUploadSuccess(false);
-    setUploadProgress(0);
-    setError('');
-
-    const storage = getStorage();
-    const storageRef = ref(storage, `tours/${tourId}/tour-preview-audio/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on('state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log('Upload is ' + progress + '% done');
-        setUploadProgress(progress);
-      },
-      (error) => {
-        console.error('Upload failed:', error);
-        setError('Upload failed. Please try again.');
-        setUploading(false);
-      },
-      () => {
-        console.log('Upload complete. Getting download URL...');
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log('File available at', downloadURL);
-          setTourPreviewAudio(downloadURL);
-          setLocalAudioUrl(downloadURL);
-          setFileName(file.name);
-          setUploadSuccess(true);
-          setUploading(false);
-        });
-      }
-    );
-  };
-
-  const handleAudioDelete = async () => {
-    if (!tourId || !tourPreviewAudio) return;
-
-    const storage = getStorage();
-    const storageRef = ref(storage, tourPreviewAudio);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!tour || !tourId) return;
 
     try {
-      await deleteObject(storageRef);
-      setTourPreviewAudio(null);
-      setLocalAudioUrl(null);
-      setFileName('');
-      setUploadSuccess(false);
-      const tourDocRef = doc(db, 'tours', tourId);
-      await updateDoc(tourDocRef, {
-        tourPreviewAudio: null,
-        tourPreviewAudioFileName: null,
-      });
-      alert('Audio file deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting audio file:', error);
-      setError('Failed to delete audio file.');
+      await schema.validate(tour, { abortEarly: false });
+      const { id, ...tourData } = tour;
+      await updateDoc(doc(db, 'tours', tourId), tourData);
+      setValidationErrors([]);
+    } catch (validationErr: any) {
+      setValidationErrors(validationErr.errors || ['Validation failed']);
     }
   };
 
-  const handleSave = async () => {
-    if (!tourId) return;
-    console.log('Saving tour data...');
-    setSaving(true);
-    try {
-      const tourDocRef = doc(db, 'tours', tourId);
-      await updateDoc(tourDocRef, {
-        title,
-        subTitle,
-        description,
-        additionalTourText,
-        tourPreviewAudio,
-        tourPreviewAudioFileName: fileName,
-      });
-      alert('Tour information updated successfully!');
-      if (tour) {
-        setTour({
-          ...tour,
-          title,
-          subTitle,
-          description,
-          additionalTourText,
-          tourPreviewAudio: tourPreviewAudio || undefined,
-          tourPreviewAudioFileName: fileName || undefined
-        });
-      }
-    } catch (err) {
-      setError('Failed to save tour data.');
-      console.error(err);
-    } finally {
-      setSaving(false);
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (!tour) return;
+
+    const { name, value } = e.target;
+    const newValue = name === 'price' ? parseFloat(value) : value;
+    setTour({ ...tour, [name]: newValue });
   };
 
-  const togglePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const seek = (seconds: number) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime += seconds;
-    }
-  };
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const onPlaying = () => setIsPlaying(true);
-    const onPause = () => setIsPlaying(false);
-    const onEnded = () => setIsPlaying(false);
-
-    audio.addEventListener('playing', onPlaying);
-    audio.addEventListener('pause', onPause);
-    audio.addEventListener('ended', onEnded);
-
-    return () => {
-      audio.removeEventListener('playing', onPlaying);
-      audio.removeEventListener('pause', onPause);
-      audio.removeEventListener('ended', onEnded);
-    };
-  }, [localAudioUrl]);
-
-  if (loading) return <p>Loading tour information...</p>;
-  if (error && !uploading) return <p style={{ color: 'red' }}>{error}</p>;
+  if (loading) return <div>Loading...</div>;
+  if (!tour) return <div>Tour not found</div>;
 
   return (
-    <div className="tour-editor-container">
-      <h2>Tour Editing Information:</h2>
-      <h3>{tour?.title}</h3>
-      
+    <form onSubmit={handleSubmit} className="tour-information-editor">
       <div className="form-group">
-        <label htmlFor="title">Tour Title</label>
-        <input id="title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <label htmlFor="title">Title:</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value={tour.title}
+          onChange={handleChange}
+        />
       </div>
 
       <div className="form-group">
-        <label htmlFor="subTitle">Tour Sub Title</label>
-        <input id="subTitle" type="text" value={subTitle} onChange={(e) => setSubTitle(e.target.value)} />
+        <label htmlFor="description">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          value={tour.description}
+          onChange={handleChange}
+          rows={4}
+        />
       </div>
 
       <div className="form-group">
-        <label>Tour Preview Audio</label>
-        {!localAudioUrl ? (
-          <div className="audio-upload-container">
-            <input type="file" accept="audio/*" onChange={handleAudioUpload} disabled={uploading} />
-          </div>
-        ) : (
-          <div className="audio-preview-container">
-            <audio ref={audioRef} src={localAudioUrl} key={localAudioUrl} style={{ display: 'none' }} />
-            <div className="audio-controls">
-              <button onClick={() => seek(-10)}>« 10s</button>
-              <button onClick={togglePlayPause}>{isPlaying ? 'Pause' : 'Play'}</button>
-              <button onClick={() => seek(10)}>10s »</button>
-            </div>
-            <div className="file-info">
-              <span>{fileName}</span>
-              <button onClick={handleAudioDelete} className="delete-button">Delete</button>
-            </div>
-          </div>
-        )}
-        {uploading && (
-          <div>
-            <p>Uploading: {Math.round(uploadProgress)}%</p>
-            <progress value={uploadProgress} max="100" />
-          </div>
-        )}
-        {uploadSuccess && <p className="success-message">File uploaded! Click "Save Changes" to commit.</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <label htmlFor="city">City:</label>
+        <input
+          type="text"
+          id="city"
+          name="city"
+          value={tour.city}
+          onChange={handleChange}
+        />
       </div>
 
       <div className="form-group">
-        <label htmlFor="description">Tour Description</label>
-        <Editor value={description} onChange={(e) => setDescription(e.target.value)} />
+        <label htmlFor="price">Price:</label>
+        <input
+          type="number"
+          id="price"
+          name="price"
+          value={tour.price || ''}
+          onChange={handleChange}
+          step="0.01"
+          min="0"
+        />
       </div>
 
-      <div className="form-group">
-        <label htmlFor="additionalTourText">Additional Tour Text</label>
-        <Editor value={additionalTourText} onChange={(e) => setAdditionalTourText(e.target.value)} />
-      </div>
+      {validationErrors.length > 0 && (
+        <div className="validation-errors">
+          {validationErrors.map((error, index) => (
+            <p key={index} className="error">{error}</p>
+          ))}
+        </div>
+      )}
 
-      <button onClick={handleSave} disabled={saving || uploading}>
-        {saving ? 'Saving...' : 'Save Changes'}
-      </button>
-    </div>
+      <div className="form-actions">
+        <button type="submit">Save</button>
+      </div>
+    </form>
   );
 };
 

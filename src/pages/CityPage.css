@@ -1,0 +1,399 @@
+.city-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.city-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.city-header {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.city-header-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.city-info-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.city-text-info h1 {
+  color: #333;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+}
+
+.city-subtitle {
+  color: #666;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin: 0 0 1rem 0;
+}
+
+.city-description {
+  color: #555;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.edit-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  align-self: flex-start;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.city-photos-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.photo-container {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+}
+
+.photo-container h3 {
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.photo-display {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.photo-display img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.photo-display:hover .photo-overlay {
+  opacity: 1;
+}
+
+.photo-upload-overlay {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.add-photo-box {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+}
+
+.add-photo-upload {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-photo-upload .upload-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.add-photo-upload .upload-button:hover {
+  background-color: #0056b3;
+}
+
+/* Edit Form Styles */
+.edit-form {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.edit-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.edit-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.edit-form input,
+.edit-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.edit-form input:focus,
+.edit-form textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.edit-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.save-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.cancel-button:hover {
+  background-color: #545b62;
+}
+
+/* Tours Section */
+.tours-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.tours-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0 0 2rem 0;
+}
+
+.tours-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.tour-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e9ecef;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tour-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tour-title {
+  color: #333;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+.tour-subtitle {
+  color: #666;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+}
+
+.tour-description {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+}
+
+.tour-distance,
+.tour-time {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+.tour-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.edit-tour-button,
+.view-tour-button {
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.edit-tour-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.edit-tour-button:hover {
+  background-color: #0056b3;
+}
+
+.view-tour-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.view-tour-button:hover {
+  background-color: #218838;
+}
+
+.no-tours {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.no-tours p {
+  font-size: 1.1rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.create-tour-button {
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.create-tour-button:hover {
+  background-color: #0056b3;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .city-content {
+    padding: 1rem;
+  }
+  
+  .city-header-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .city-text-info h1 {
+    font-size: 2rem;
+  }
+  
+  .tours-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .edit-actions {
+    flex-direction: column;
+  }
+  
+  .save-button,
+  .cancel-button {
+    width: 100%;
+  }
+} 

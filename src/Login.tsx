@@ -4,23 +4,36 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword, type AuthEr
 import './Login.css';
 import { auth } from './firebaseConfig';
 import type { AppUser } from './interfaces';
+import ErrorMessage from './components/ErrorMessage';
+import * as yup from 'yup';
 
 interface LoginProps {
   user: AppUser | null;
 }
+
+const loginSchema = yup.object({
+  email: yup.string().email('Invalid email address').required('Email is required'),
+  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+});
 
 const Login: React.FC<LoginProps> = ({ user }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   const handleAuthAction = async () => {
     setError('');
+    setValidationErrors([]);
 
-    if (!email || !password) {
-      setError('Please enter both email and password.');
-      return;
+    try {
+      await loginSchema.validate({ email, password }, { abortEarly: false });
+    } catch (validationErr) {
+      if (validationErr instanceof yup.ValidationError) {
+        setValidationErrors(validationErr.errors);
+        return;
+      }
     }
 
     try {
@@ -30,8 +43,8 @@ const Login: React.FC<LoginProps> = ({ user }) => {
         await signInWithEmailAndPassword(auth, email, password);
       }
     } catch (err: unknown) {
-        const authError = err as AuthError;
-        setError(`Failed to ${isRegistering ? 'register' : 'login'}. ${authError.message}`);
+      const authError = err as AuthError;
+      setError(`Failed to ${isRegistering ? 'register' : 'login'}. ${authError.message}`);
     }
   };
 
@@ -58,10 +71,11 @@ const Login: React.FC<LoginProps> = ({ user }) => {
       <button onClick={handleAuthAction}>
         {isRegistering ? 'Register' : 'Login'}
       </button>
-      <button onClick={() => setIsRegistering(!isRegistering)}>
+      <button onClick={() => { setIsRegistering(!isRegistering); setError(''); setValidationErrors([]); }}>
         {isRegistering ? 'Have an account? Login' : 'Need an account? Register'}
       </button>
-      {error && <p className="error">{error}</p>}
+      {validationErrors.map((msg, idx) => <ErrorMessage key={idx} message={msg} />)}
+      {error && <ErrorMessage message={error} />}
     </div>
   );
 };

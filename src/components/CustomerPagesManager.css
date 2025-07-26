@@ -1,0 +1,254 @@
+.customer-pages-manager {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.manager-header h2 {
+  color: #333;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.add-page-button {
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.add-page-button:hover {
+  background-color: #146c43;
+}
+
+.add-page-form {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border: 1px solid #dee2e6;
+}
+
+.add-page-form h3 {
+  margin-top: 0;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.save-button {
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.save-button:hover {
+  background-color: #146c43;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.cancel-button:hover {
+  background-color: #5a6268;
+}
+
+.pages-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.pages-table th,
+.pages-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.pages-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+}
+
+.pages-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status.published {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.status.draft {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.action-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.action-button.edit {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.action-button.edit:hover {
+  background-color: #0b5ed7;
+}
+
+.action-button.view {
+  background-color: #6f42c1;
+  color: white;
+}
+
+.action-button.view:hover {
+  background-color: #5d3a9e;
+}
+
+.action-button.toggle-publish {
+  background-color: #fd7e14;
+  color: white;
+}
+
+.action-button.toggle-publish:hover {
+  background-color: #e8690b;
+}
+
+.action-button.delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.action-button.delete:hover {
+  background-color: #bb2d3b;
+}
+
+.no-pages {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+@media (max-width: 768px) {
+  .customer-pages-manager {
+    padding: 1rem;
+  }
+
+  .manager-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .add-page-button {
+    width: 100%;
+  }
+
+  .pages-table {
+    font-size: 0.875rem;
+  }
+
+  .pages-table th,
+  .pages-table td {
+    padding: 0.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+  }
+} 

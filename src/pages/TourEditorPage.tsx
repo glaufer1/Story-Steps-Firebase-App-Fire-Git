@@ -4,6 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import type { Tour } from '../interfaces';
 import './TourEditorPage.css';
+import ErrorMessage from '../components/ErrorMessage';
 
 const TourEditorPage: React.FC = () => {
   const { tourId } = useParams<{ tourId: string }>();
@@ -36,7 +37,7 @@ const TourEditorPage: React.FC = () => {
   }, [tourId, db]);
 
   if (loading) return <p>Loading tour details...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (error) return <ErrorMessage message={error} />;
   if (!tour) return <p>No tour data found.</p>;
 
   return (

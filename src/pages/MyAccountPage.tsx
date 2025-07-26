@@ -1,64 +1,128 @@
-import React from 'react';
-import type { AppUser } from '../interfaces';
-import './PageStyles.css';
+import React, { useState } from 'react';
+import { getAuth, updatePassword, updateEmail } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
+import { AppUser } from '../interfaces';
+import CustomerHeader from '../components/CustomerHeader';
+import * as yup from 'yup';
+import './MyAccountPage.css';
+
+const schema = yup.object().shape({
+  email: yup.string().email('Invalid email').required('Email is required'),
+  password: yup.string().min(6, 'Password must be at least 6 characters').optional(),
+  passwordConfirm: yup.string()
+    .test('passwords-match', 'Passwords must match', function(value) {
+      return !this.parent.password || value === this.parent.password;
+    })
+    .optional(),
+});
 
 interface MyAccountPageProps {
-    user: AppUser;
+  user: AppUser;
 }
 
 const MyAccountPage: React.FC<MyAccountPageProps> = ({ user }) => {
-    // We will add state and handlers for these fields later
-    const [phoneNumber, setPhoneNumber] = React.useState('');
-    const [allowSms, setAllowSms] = React.useState(false);
-    const [address, setAddress] = React.useState('');
-    const [city, setCity] = React.useState('');
-    const [state, setState] = React.useState('');
-    const [zip, setZip] = React.useState('');
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  const [email, setEmail] = useState(currentUser?.email || '');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [success, setSuccess] = useState('');
 
-    return (
-        <div className="page-container">
-            <h1>My Account</h1>
-            <p>Welcome, {user.email}!</p>
-            
-            <form className="profile-form">
-                <div className="form-group">
-                    <label>Name</label>
-                    <input type="text" value={user.email || ''} disabled />
-                </div>
-                <div className="form-group">
-                    <label>Email</label>
-                    <input type="email" value={user.email || ''} disabled />
-                </div>
-                <div className="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                </div>
-                <div className="form-group checkbox-group">
-                    <input type="checkbox" id="sms-approval" checked={allowSms} onChange={(e) => setAllowSms(e.target.checked)} />
-                    <label htmlFor="sms-approval">Approve the use of your Phone number for account maintenance (e.g., password resets).</label>
-                </div>
-                <div className="form-group">
-                    <label>Address</label>
-                    <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} />
-                </div>
-                <div className="form-grid">
-                    <div className="form-group">
-                        <label>City</label>
-                        <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>State</label>
-                        <input type="text" value={state} onChange={(e) => setState(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Zip Code</label>
-                        <input type="text" value={zip} onChange={(e) => setZip(e.target.value)} />
-                    </div>
-                </div>
-                <button type="submit" className="purchase-btn">Save Changes</button>
-            </form>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setValidationErrors([]);
+    setSuccess('');
+
+    if (!currentUser) {
+      setValidationErrors(['You must be logged in to update your account']);
+      return;
+    }
+
+    try {
+      await schema.validate({ email, password, passwordConfirm }, { abortEarly: false });
+
+      // Update email if changed
+      if (email !== currentUser.email) {
+        await updateEmail(currentUser, email);
+        await updateDoc(doc(db, 'users', currentUser.uid), { email });
+      }
+
+      // Update password if provided
+      if (password) {
+        await updatePassword(currentUser, password);
+      }
+
+      setSuccess('Account updated successfully!');
+      setPassword('');
+      setPasswordConfirm('');
+    } catch (validationErr: any) {
+      setValidationErrors(validationErr.errors);
+    }
+  };
+
+  if (!currentUser) {
+    return <div>Please log in to access your account settings.</div>;
+  }
+
+  return (
+    <div className="my-account-page">
+      <CustomerHeader user={user} />
+      
+      <main className="account-content">
+        <div className="account-container">
+          <h2>My Account</h2>
+          
+          <form onSubmit={handleSubmit} className="my-account-form">
+            <div className="form-group">
+              <label htmlFor="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">New Password (optional):</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="passwordConfirm">Confirm New Password:</label>
+              <input
+                type="password"
+                id="passwordConfirm"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+              />
+            </div>
+
+            {validationErrors.length > 0 && (
+              <div className="validation-errors">
+                {validationErrors.map((error, index) => (
+                  <p key={index} className="error">{error}</p>
+                ))}
+              </div>
+            )}
+
+            {success && <p className="success">{success}</p>}
+
+            <div className="form-actions">
+              <button type="submit">Save Changes</button>
+            </div>
+          </form>
         </div>
-    );
+      </main>
+    </div>
+  );
 };
 
 export default MyAccountPage;

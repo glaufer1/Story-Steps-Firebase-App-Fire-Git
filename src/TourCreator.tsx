@@ -4,6 +4,24 @@ import { doc, getDoc, updateDoc, addDoc, collection } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import type { Tour, Stop } from './interfaces';
 import './TourCreator.css';
+import ErrorMessage from './components/ErrorMessage';
+import * as yup from 'yup';
+
+const stopSchema = yup.object({
+  id: yup.string().required(),
+  name: yup.string().min(2, 'Stop name is too short').required('Stop name is required'),
+  location: yup.object({
+    latitude: yup.number().required('Latitude required').min(-90).max(90),
+    longitude: yup.number().required('Longitude required').min(-180).max(180),
+  }),
+});
+
+const tourSchema = yup.object({
+  title: yup.string().min(2, 'Tour title is too short').required('Tour title is required'),
+  description: yup.string().min(10, 'Description is too short').required('Description is required'),
+  price: yup.number().min(0, 'Price must be 0 or greater').required('Price is required'),
+  stops: yup.array().of(stopSchema).min(1, 'At least one stop is required'),
+});
 
 const TourCreator = () => {
   const { tourId } = useParams<{ tourId: string }>();
@@ -18,6 +36,7 @@ const TourCreator = () => {
   const [newStopLng, setNewStopLng] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   useEffect(() => {
     if (tourId) {
@@ -55,13 +74,21 @@ const TourCreator = () => {
 
   const handleSaveTour = async () => {
     setError('');
+    setValidationErrors([]);
     const tourData = {
       title: tourTitle,
       description: tourDescription,
       price: tourPrice,
       stops: stops,
     };
-
+    try {
+      await tourSchema.validate(tourData, { abortEarly: false });
+    } catch (validationErr) {
+      if (validationErr instanceof yup.ValidationError) {
+        setValidationErrors(validationErr.errors);
+        return;
+      }
+    }
     try {
       if (isEditing && tourId) {
         await updateDoc(doc(db, 'tours', tourId), tourData);
@@ -128,9 +155,10 @@ const TourCreator = () => {
       </div>
 
       <button onClick={handleSaveTour}>
-        {isEditing ? 'Update Tour' : 'Save Tour'}
+        {isEditing ? 'Save Changes' : 'Create Tour'}
       </button>
-      {error && <p className="error">{error}</p>}
+      {validationErrors.map((msg, idx) => <ErrorMessage key={idx} message={msg} />)}
+      {error && <ErrorMessage message={error} />}
     </div>
   );
 };

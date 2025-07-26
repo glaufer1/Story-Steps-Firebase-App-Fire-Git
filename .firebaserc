@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "story-steps-app-fire"
-  }
+    "default": "story-steps-new-app-791bd",
+    "staging": "story-steps-new-app-791bd"
+  },
+  "targets": {},
+  "etags": {}
 }

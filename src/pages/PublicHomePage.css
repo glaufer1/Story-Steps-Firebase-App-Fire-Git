@@ -1,0 +1,411 @@
+.public-home-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 0;
+  border-bottom: 2px solid #eee;
+}
+
+.page-header h1 {
+  color: #333;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.page-description {
+  color: #666;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.page-section {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e9ecef;
+}
+
+.page-section.hidden {
+  display: none;
+}
+
+/* Header Section */
+.section-header {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.section-header h1 {
+  color: #333;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.header-content {
+  color: #666;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Text Section */
+.text-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.text-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.text-content {
+  color: #555;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.text-content p {
+  margin-bottom: 1rem;
+}
+
+.text-content h1, .text-content h2, .text-content h3 {
+  color: #333;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Gallery Section */
+.gallery-section {
+  text-align: center;
+}
+
+.gallery-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.gallery-item {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.gallery-item:hover {
+  transform: translateY(-4px);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+/* Audio Section */
+.audio-section {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.audio-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.audio-player {
+  margin-top: 2rem;
+}
+
+.audio-player audio {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* Map Section */
+.map-section {
+  text-align: center;
+}
+
+.map-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.map-container {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Tour Content Section */
+.tour-content-section {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.tour-content-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.tour-info {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.tour-info p {
+  margin: 0.5rem 0;
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.tour-description {
+  margin-top: 1.5rem;
+  text-align: left;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Stop Content Section */
+.stop-content-section {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.stop-content-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.stop-info {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.stop-info p {
+  margin: 0.5rem 0;
+  color: #555;
+  font-size: 1.1rem;
+}
+
+/* Contact Form Section */
+.contact-section {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.contact-form {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.submit-button {
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.submit-button:hover {
+  background-color: #146c43;
+}
+
+/* Social Media Section */
+.social-media-section {
+  text-align: center;
+}
+
+.social-media-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.social-link {
+  background-color: #6f42c1;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.social-link:hover {
+  background-color: #5d3a9e;
+}
+
+/* Custom Section */
+.custom-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.custom-section h2 {
+  color: #333;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.custom-content {
+  color: #555;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+/* Loading and Error States */
+.loading,
+.error,
+.no-content {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.no-content {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .public-home-page {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+  }
+
+  .section-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .text-section h2,
+  .gallery-section h2,
+  .audio-section h2,
+  .map-section h2,
+  .tour-content-section h2,
+  .stop-content-section h2,
+  .contact-section h2,
+  .social-media-section h2,
+  .custom-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .social-links {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .social-link {
+    width: 200px;
+    text-align: center;
+  }
+} 
